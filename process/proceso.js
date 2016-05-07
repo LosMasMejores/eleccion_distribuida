@@ -203,7 +203,7 @@ process.on('message', function(message) {
 
 /**
  * Listener que se encarga de gestionar los eventos del proceso
- * @param  {object} message Mensaje enviado por el evento
+ * @param  {object} message Mensaje enviado por el emisor
  * @return {undefined} No devuelve nada
  */
 myEmitter.on('eleccion', function(message) {
