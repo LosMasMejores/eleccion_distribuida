@@ -33,7 +33,7 @@ function run(next) {
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             function(error, response, body) {
               if (!error && response.statusCode == 200) {
-                if (JSON.parse(body)["resultado"] === 1) {
+                if (JSON.parse(body).resultado === 1) {
                   console.log(JSON.parse(body));
                 } else {
                   myEmitter.emit('eleccion', {
