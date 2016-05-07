@@ -48,8 +48,7 @@ function run(next) {
               next();
             });
         }
-      }
-    );
+      });
   }, parseInt(Math.random() * 500) + 500);
 }
 
@@ -142,8 +141,7 @@ function avisar() {
           }
         }
       }
-    }
-  );
+    });
 }
 
 
@@ -187,8 +185,7 @@ process.on('message', function(message) {
               request.get('http://' + info[message.candidato] + '/servicio/ok?id=' + message.candidato);
             }
           }
-        }
-      );
+        });
       myEmitter.emit('eleccion', message);
       break;
     case 'ok':
