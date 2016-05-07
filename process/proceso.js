@@ -20,13 +20,12 @@ function run(next) {
   if (process.env.estado === "PARADO") {
     return next(process.env.id + ' run() PARADO');
   }
-  setTimeout(function () {
+  setTimeout(function() {
     request('http://localhost:3000/servicio/informacion',
       function(error, response, body) {
         if (!error && response.statusCode == 200) {
           var server = JSON.parse(body)[process.env.id];
-          request('http://' + server
-            + '/servicio/computar?id=' + process.env.coordinador,
+          request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             function(error, response, body) {
               if (!error && response.statusCode == 200) {
                 if (JSON.parse(body)["resultado"] === 1) {
@@ -57,7 +56,7 @@ function computar() {
       resultado: -1
     });
   } else {
-    setTimeout(function () {
+    setTimeout(function() {
       process.send({
         resultado: 1
       });
@@ -75,14 +74,12 @@ function eleccionActiva() {
         var at_least_one = false;
         for (var key in info) {
           if (info.hasOwnProperty(key) && key > process.env.id) {
-            request.get('http://' + info[key]
-              + '/servicio/eleccion?id=' + key
-              + '&candidato=' + process.env.id);
+            request.get('http://' + info[key] + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id);
             at_least_one = true;
           }
         }
         if (at_least_one) {
-          activa_timeout = setTimeout(function () {
+          activa_timeout = setTimeout(function() {
             myEmitter.emit('eleccion', {
               cmd: 'avisar'
             });
@@ -99,7 +96,7 @@ function eleccionActiva() {
 
 function eleccionPasiva() {
   console.log(process.env.id + ' eleccionPasiva()');
-  pasiva_timeout = setTimeout(function () {
+  pasiva_timeout = setTimeout(function() {
     myEmitter.emit('eleccion', {
       cmd: 'noCoordinador'
     });
@@ -118,9 +115,7 @@ function avisar() {
             continue;
           }
           if (info.hasOwnProperty(key)) {
-            request.get('http://' + info[key]
-              + '/servicio/coordinador?id=' + key
-              + '&candidato=' + process.env.id);
+            request.get('http://' + info[key] + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id);
           }
         }
       }
@@ -161,8 +156,7 @@ process.on('message', function(message) {
           if (!error && response.statusCode == 200) {
             var info = JSON.parse(body);
             if (info[message.candidato]) {
-              request.get('http://' + info[message.candidato]
-                + '/servicio/ok?id=' + message.candidato);
+              request.get('http://' + info[message.candidato] + '/servicio/ok?id=' + message.candidato);
             }
           }
         }
@@ -179,7 +173,7 @@ process.on('message', function(message) {
 });
 
 
-myEmitter.on('eleccion', function (message) {
+myEmitter.on('eleccion', function(message) {
   switch (message.cmd) {
     case 'eleccion':
       if (process.env.eleccion === 'ACUERDO') {
