@@ -66,7 +66,7 @@ function computar() {
 }
 
 
-function eleccionActiva(candidato) {
+function eleccionActiva() {
   console.log(process.env.id + ' eleccionActiva()');
   request('http://localhost:3000/servicio/informacion',
     function(error, response, body) {
@@ -184,7 +184,7 @@ myEmitter.on('eleccion', function (message) {
     case 'eleccion':
       if (process.env.eleccion === 'ACUERDO') {
         process.env.eleccion = 'ELECCION ACTIVA';
-        _.defer(eleccionActiva, message.candidato);
+        _.defer(eleccionActiva);
       }
       break;
     case 'avisar':
