@@ -15,6 +15,11 @@ var pasiva_timeout;
 const myEmitter = new EventEmitter();
 
 
+/**
+ * Tarea principal del proceso
+ * @param  {Function} next Callback que se llama en cada iteracion
+ * @return {undefined} No devuelve ningun valor, solo sirve para asegurarse se que no se continua
+ */
 function run(next) {
   console.log(process.env.id + ' run()');
   if (process.env.estado === "PARADO") {
@@ -49,22 +54,32 @@ function run(next) {
 }
 
 
+/**
+ * Funcion que simula la operacion de computar del coordinador
+ * @return {number} Resultado de la operacion
+ */
 function computar() {
   console.log(process.env.id + ' computar()');
   if (process.env.estado === "PARADO") {
     process.send({
       resultado: -1
     });
+    return -1;
   } else {
     setTimeout(function() {
       process.send({
         resultado: 1
       });
+      return 1;
     }, parseInt(Math.random() * 200) + 100);
   }
 }
 
 
+/**
+ * Parte del proceso de eleccion que se corresponde con la eleccion activa
+ * @return {undefined} No devuelve nada
+ */
 function eleccionActiva() {
   console.log(process.env.id + ' eleccionActiva()');
   request('http://localhost:3000/servicio/informacion',
@@ -94,6 +109,10 @@ function eleccionActiva() {
 }
 
 
+/**
+ * Parte del proceso de eleccion que se corresponde con la eleccion pasiva
+ * @return {undefined} No devuelve nada
+ */
 function eleccionPasiva() {
   console.log(process.env.id + ' eleccionPasiva()');
   pasiva_timeout = setTimeout(function() {
@@ -104,6 +123,10 @@ function eleccionPasiva() {
 }
 
 
+/**
+ * Funcion que se encarga de avisar al resto de procesos de que somos el coordinador
+ * @return {undefined} No devuelve nada
+ */
 function avisar() {
   console.log(process.env.id + ' avisar()');
   request('http://localhost:3000/servicio/informacion',
@@ -124,6 +147,11 @@ function avisar() {
 }
 
 
+/**
+ * Listener que se encarga de gestionar los mensages enviados por servicio
+ * @param  {object} message Mensaje enviado por servicio
+ * @return {undefined} No devuelve nada
+ */
 process.on('message', function(message) {
   switch (message.cmd) {
     case 'arrancar':
@@ -173,6 +201,11 @@ process.on('message', function(message) {
 });
 
 
+/**
+ * Listener que se encarga de gestionar los eventos del proceso
+ * @param  {object} message Mensaje enviado por el evento
+ * @return {undefined} No devuelve nada
+ */
 myEmitter.on('eleccion', function(message) {
   switch (message.cmd) {
     case 'eleccion':
