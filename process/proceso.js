@@ -29,7 +29,7 @@ function run(next) {
     request('http://localhost:3000/servicio/informacion',
       function(error, response, body) {
         if (!error && response.statusCode == 200) {
-          var server = JSON.parse(body)[process.env.id];
+          var server = JSON.parse(body)[process.env.coordinador];
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             function(error, response, body) {
               if (!error && response.statusCode == 200) {
