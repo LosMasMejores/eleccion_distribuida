@@ -8,11 +8,11 @@
 var async = require('async');
 var request = require('request');
 var _ = require('underscore');
-const EventEmitter = require('events');
+var EventEmitter = require('events');
 
 var activa_timeout;
 var pasiva_timeout;
-const myEmitter = new EventEmitter();
+var myEmitter = new EventEmitter();
 
 
 /**
