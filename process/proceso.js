@@ -3,7 +3,7 @@
  */
 
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var async = require('async');
 var request = require('request');
@@ -22,17 +22,17 @@ var myEmitter = new EventEmitter();
  */
 function run(next) {
   console.log(process.env.id + ' run()');
-  if (process.env.estado === "PARADO") {
+  if (process.env.estado === 'PARADO') {
     return next(process.env.id + ' run() PARADO');
   }
   setTimeout(function() {
     request('http://localhost:3000/servicio/informacion',
       function(error, response, body) {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
           var server = JSON.parse(body)[process.env.coordinador];
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             function(error, response, body) {
-              if (!error && response.statusCode == 200) {
+              if (!error && response.statusCode === 200) {
                 if (JSON.parse(body).resultado === 1) {
                   console.log(JSON.parse(body));
                 } else {
@@ -59,7 +59,7 @@ function run(next) {
  */
 function computar() {
   console.log(process.env.id + ' computar()');
-  if (process.env.estado === "PARADO") {
+  if (process.env.estado === 'PARADO') {
     process.send({
       resultado: -1
     });
@@ -83,7 +83,7 @@ function eleccionActiva() {
   console.log(process.env.id + ' eleccionActiva()');
   request('http://localhost:3000/servicio/informacion',
     function(error, response, body) {
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
         var at_least_one = false;
         for (var key in info) {
@@ -131,7 +131,7 @@ function avisar() {
   request('http://localhost:3000/servicio/informacion',
     function(error, response, body) {
       var info = JSON.parse(body);
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         for (var key in info) {
           if (key === process.env.id) {
             continue;
@@ -153,16 +153,16 @@ function avisar() {
 process.on('message', function(message) {
   switch (message.cmd) {
     case 'arrancar':
-      if (process.env.estado === "CORRIENDO") {
+      if (process.env.estado === 'CORRIENDO') {
         break;
       }
-      process.env.estado = "CORRIENDO";
+      process.env.estado = 'CORRIENDO';
       async.forever(run, function error(err) {
         console.log(err);
       });
       break;
     case 'parar':
-      process.env.estado = "PARADO";
+      process.env.estado = 'PARADO';
       break;
     case 'computar':
       _.defer(computar);
@@ -179,7 +179,7 @@ process.on('message', function(message) {
       }
       request('http://localhost:3000/servicio/informacion',
         function(error, response, body) {
-          if (!error && response.statusCode == 200) {
+          if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
             if (info[message.candidato]) {
               request.get('http://' + info[message.candidato] + '/servicio/ok?id=' + message.candidato);

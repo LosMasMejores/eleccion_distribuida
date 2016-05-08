@@ -3,7 +3,7 @@
  */
 
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var express = require('express');
 var router = express.Router();
@@ -24,28 +24,28 @@ router.get('/arrancar', function(req, res) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
     procesos[req.query.id].send({
-      cmd: "arrancar"
+      cmd: 'arrancar'
     });
     res.send(JSON.stringify({
-      state: "running"
+      state: 'running'
     }));
   } else {
     var options = {
       env: {
         id: req.query.id,
         coordinador: 0,
-        estado: "PARADO",
-        eleccion: "ACUERDO"
+        estado: 'PARADO',
+        eleccion: 'ACUERDO'
       }
     };
     var child = child_process.fork('process/proceso.js', [], options);
-    informacion[req.query.id] = "localhost:3000";
+    informacion[req.query.id] = 'localhost:3000';
     procesos[req.query.id] = child;
     child.send({
-      cmd: "arrancar"
+      cmd: 'arrancar'
     });
     res.send(JSON.stringify({
-      state: "running"
+      state: 'running'
     }));
   }
 });
@@ -56,10 +56,10 @@ router.get('/parar', function(req, res) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
     procesos[req.query.id].send({
-      cmd: "parar"
+      cmd: 'parar'
     });
     res.send(JSON.stringify({
-      state: "stopping"
+      state: 'stopping'
     }));
   } else {
     res.sendStatus(400);
@@ -76,7 +76,7 @@ router.get('/computar', function(req, res) {
       res.send(m);
     });
     child.send({
-      cmd: "computar"
+      cmd: 'computar'
     });
   } else {
     res.sendStatus(400);
@@ -90,7 +90,7 @@ router.get('/eleccion', function(req, res) {
   } else if (procesos[req.query.id]) {
     var child = procesos[req.query.id];
     child.send({
-      cmd: "eleccion",
+      cmd: 'eleccion',
       candidato: req.query.candidato
     });
     res.send('eleccion');
@@ -106,7 +106,7 @@ router.get('/ok', function(req, res) {
   } else if (procesos[req.query.id]) {
     var child = procesos[req.query.id];
     child.send({
-      cmd: "ok"
+      cmd: 'ok'
     });
     res.send('ok');
   } else {
@@ -123,7 +123,7 @@ router.get('/informacion', function(req, res) {
       res.send(m);
     });
     procesos[req.query.id].send({
-      cmd: "informacion"
+      cmd: 'informacion'
     });
   } else {
     res.sendStatus(400);
@@ -136,7 +136,7 @@ router.get('/coordinador', function(req, res) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {
     procesos[req.query.id].send({
-      cmd: "coordinador",
+      cmd: 'coordinador',
       candidato: req.query.candidato
     });
     res.send(JSON.stringify({
