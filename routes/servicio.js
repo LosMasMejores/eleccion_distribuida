@@ -3,15 +3,14 @@
  */
 
 /*jslint node: true */
-'use strict';
 
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-var child_process = require('child_process');
+let child_process = require('child_process');
 
-var procesos = {};
-var informacion = {};
+let procesos = {};
+let informacion = {};
 
 
 router.get('/', function(req, res) {
@@ -30,7 +29,7 @@ router.get('/arrancar', function(req, res) {
       state: 'running'
     }));
   } else {
-    var options = {
+    let options = {
       env: {
         id: req.query.id,
         coordinador: 0,
@@ -38,7 +37,7 @@ router.get('/arrancar', function(req, res) {
         eleccion: 'ACUERDO'
       }
     };
-    var child = child_process.fork('process/proceso.js', [], options);
+    let child = child_process.fork('process/proceso.js', [], options);
     informacion[req.query.id] = 'localhost:3000';
     procesos[req.query.id] = child;
     child.send({
@@ -71,7 +70,7 @@ router.get('/computar', function(req, res) {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
-    var child = procesos[req.query.id];
+    let child = procesos[req.query.id];
     child.once('message', function(m) {
       res.send(m);
     });
@@ -88,7 +87,7 @@ router.get('/eleccion', function(req, res) {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
-    var child = procesos[req.query.id];
+    let child = procesos[req.query.id];
     child.send({
       cmd: 'eleccion',
       candidato: req.query.candidato
@@ -104,7 +103,7 @@ router.get('/ok', function(req, res) {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
-    var child = procesos[req.query.id];
+    let child = procesos[req.query.id];
     child.send({
       cmd: 'ok'
     });

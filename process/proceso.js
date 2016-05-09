@@ -3,16 +3,15 @@
  */
 
 /*jslint node: true */
-'use strict';
 
-var async = require('async');
-var request = require('request');
-var _ = require('underscore');
-var EventEmitter = require('events');
+let async = require('async');
+let request = require('request');
+let _ = require('underscore');
+let EventEmitter = require('events');
 
-var activa_timeout;
-var pasiva_timeout;
-var myEmitter = new EventEmitter();
+let activa_timeout;
+let pasiva_timeout;
+let myEmitter = new EventEmitter();
 
 
 /**
@@ -29,7 +28,7 @@ function run(next) {
     request('http://localhost:3000/servicio/informacion',
       function(error, response, body) {
         if (!error && response.statusCode === 200) {
-          var server = JSON.parse(body)[process.env.coordinador];
+          let server = JSON.parse(body)[process.env.coordinador];
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             function(error, response, body) {
               if (!error && response.statusCode === 200) {
@@ -84,9 +83,9 @@ function eleccionActiva() {
   request('http://localhost:3000/servicio/informacion',
     function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        var info = JSON.parse(body);
-        var at_least_one = false;
-        for (var key in info) {
+        let info = JSON.parse(body);
+        let at_least_one = false;
+        for (let key in info) {
           if (info.hasOwnProperty(key) && key > process.env.id) {
             request.get('http://' + info[key] + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id);
             at_least_one = true;
@@ -130,13 +129,13 @@ function avisar() {
   console.log(process.env.id + ' avisar()');
   request('http://localhost:3000/servicio/informacion',
     function(error, response, body) {
-      var info = JSON.parse(body);
+      let info = JSON.parse(body);
       if (!error && response.statusCode === 200) {
-        for (var key in info) {
-          if (key === process.env.id) {
-            continue;
-          }
+        for (let key in info) {
           if (info.hasOwnProperty(key)) {
+            if (key === process.env.id) {
+              continue;
+            }
             request.get('http://' + info[key] + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id);
           }
         }
@@ -180,7 +179,7 @@ process.on('message', function(message) {
       request('http://localhost:3000/servicio/informacion',
         function(error, response, body) {
           if (!error && response.statusCode === 200) {
-            var info = JSON.parse(body);
+            let info = JSON.parse(body);
             if (info[message.candidato]) {
               request.get('http://' + info[message.candidato] + '/servicio/ok?id=' + message.candidato);
             }
