@@ -8,7 +8,7 @@ block content
       p.lead IP DEL SERVIDOR:
         input(ng-model="servidor")
       h1 {{servidor}}
-      button.btn-primary(ng-click="guardarServidor(servidor)") llamar
+      button.btn-primary(ng-click="guardarServidor(servidor)") añadir
       div(ng-show="mostrar" ng-repeat="x in servArray track by $index")
         p.lead {{x}} PROCESO:
         input(ng-model="pro")
