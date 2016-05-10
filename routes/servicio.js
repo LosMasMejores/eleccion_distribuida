@@ -118,7 +118,7 @@ router.get('/informacion', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {
-    procesos[req.query.id].on('message', (m) => {
+    procesos[req.query.id].once('message', (m) => {
       res.send(m);
     });
     procesos[req.query.id].send({
