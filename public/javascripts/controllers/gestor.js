@@ -1,8 +1,8 @@
 var app = angular.module('myApp', []);
 
-app.controller('servidor', function($scope, $http) {
-  $scope.ip = "ip";
-  $scope.pro = "proceso";
+app.controller('gestor', function($scope, $http) {
+  $scope.servidor = 'ip';
+  $scope.pro = 'proceso';
   $scope.mostrar = false;
   $scope.mostrar2 = false;
   $scope.ipArray = [];
