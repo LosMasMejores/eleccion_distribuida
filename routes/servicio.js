@@ -13,12 +13,12 @@ var procesos = {};
 var informacion = {};
 
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   res.send('API servicio');
 });
 
 
-router.get('/arrancar', function(req, res) {
+router.get('/arrancar', (req, res) => {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -50,7 +50,7 @@ router.get('/arrancar', function(req, res) {
 });
 
 
-router.get('/parar', function(req, res) {
+router.get('/parar', (req, res) => {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -66,12 +66,12 @@ router.get('/parar', function(req, res) {
 });
 
 
-router.get('/computar', function(req, res) {
+router.get('/computar', (req, res) => {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
     var child = procesos[req.query.id];
-    child.once('message', function(m) {
+    child.once('message', (m) => {
       res.send(m);
     });
     child.send({
@@ -83,7 +83,7 @@ router.get('/computar', function(req, res) {
 });
 
 
-router.get('/eleccion', function(req, res) {
+router.get('/eleccion', (req, res) => {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -99,7 +99,7 @@ router.get('/eleccion', function(req, res) {
 });
 
 
-router.get('/ok', function(req, res) {
+router.get('/ok', (req, res) => {
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -114,11 +114,11 @@ router.get('/ok', function(req, res) {
 });
 
 
-router.get('/informacion', function(req, res) {
+router.get('/informacion', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {
-    procesos[req.query.id].on('message', function(m) {
+    procesos[req.query.id].on('message', (m) => {
       res.send(m);
     });
     procesos[req.query.id].send({
@@ -130,7 +130,7 @@ router.get('/informacion', function(req, res) {
 });
 
 
-router.get('/coordinador', function(req, res) {
+router.get('/coordinador', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {

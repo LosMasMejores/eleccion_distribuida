@@ -19,18 +19,18 @@ var myEmitter = new EventEmitter();
  * @param  {Function} next Callback que se llama en cada iteracion
  * @return {undefined} No devuelve ningun valor, solo sirve para asegurarse se que no se continua
  */
-function run(next) {
+var run = (next) => {
   console.log(process.env.id + ' run()');
   if (process.env.estado === 'PARADO') {
     return next(process.env.id + ' run() PARADO');
   }
-  setTimeout(function() {
+  setTimeout(() => {
     request('http://localhost:3000/servicio/informacion',
-      function(error, response, body) {
+      (error, response, body) => {
         if (!error && response.statusCode === 200) {
           var server = JSON.parse(body)[process.env.coordinador];
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
-            function(error, response, body) {
+            (error, response, body) => {
               if (!error && response.statusCode === 200) {
                 if (JSON.parse(body).resultado === 1) {
                   console.log(JSON.parse(body));
@@ -49,14 +49,14 @@ function run(next) {
         }
       });
   }, parseInt(Math.random() * 500) + 500);
-}
+};
 
 
 /**
  * Funcion que simula la operacion de computar del coordinador
  * @return {number} Resultado de la operacion
  */
-function computar() {
+var computar = () => {
   console.log(process.env.id + ' computar()');
   if (process.env.estado === 'PARADO') {
     process.send({
@@ -64,24 +64,24 @@ function computar() {
     });
     return -1;
   } else {
-    setTimeout(function() {
+    setTimeout(() => {
       process.send({
         resultado: 1
       });
       return 1;
     }, parseInt(Math.random() * 200) + 100);
   }
-}
+};
 
 
 /**
  * Parte del proceso de eleccion que se corresponde con la eleccion activa
  * @return {undefined} No devuelve nada
  */
-function eleccionActiva() {
+var eleccionActiva = () => {
   console.log(process.env.id + ' eleccionActiva()');
   request('http://localhost:3000/servicio/informacion',
-    function(error, response, body) {
+    (error, response, body) => {
       if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
         var at_least_one = false;
@@ -92,7 +92,7 @@ function eleccionActiva() {
           }
         }
         if (at_least_one) {
-          activa_timeout = setTimeout(function() {
+          activa_timeout = setTimeout(() => {
             myEmitter.emit('eleccion', {
               cmd: 'avisar'
             });
@@ -104,31 +104,31 @@ function eleccionActiva() {
         }
       }
     });
-}
+};
 
 
 /**
  * Parte del proceso de eleccion que se corresponde con la eleccion pasiva
  * @return {undefined} No devuelve nada
  */
-function eleccionPasiva() {
+var eleccionPasiva = () => {
   console.log(process.env.id + ' eleccionPasiva()');
-  pasiva_timeout = setTimeout(function() {
+  pasiva_timeout = setTimeout(() => {
     myEmitter.emit('eleccion', {
       cmd: 'noCoordinador'
     });
   }, 1000);
-}
+};
 
 
 /**
  * Funcion que se encarga de avisar al resto de procesos de que somos el coordinador
  * @return {undefined} No devuelve nada
  */
-function avisar() {
+var avisar = () => {
   console.log(process.env.id + ' avisar()');
   request('http://localhost:3000/servicio/informacion',
-    function(error, response, body) {
+    (error, response, body) => {
       var info = JSON.parse(body);
       if (!error && response.statusCode === 200) {
         for (var key in info) {
@@ -141,7 +141,7 @@ function avisar() {
         }
       }
     });
-}
+};
 
 
 /**
@@ -149,14 +149,14 @@ function avisar() {
  * @param  {object} message Mensaje enviado por servicio
  * @return {undefined} No devuelve nada
  */
-process.on('message', function(message) {
+process.on('message', (message) => {
   switch (message.cmd) {
     case 'arrancar':
       if (process.env.estado === 'CORRIENDO') {
         break;
       }
       process.env.estado = 'CORRIENDO';
-      async.forever(run, function error(err) {
+      async.forever(run, (err) => {
         console.log(err);
       });
       break;
@@ -177,7 +177,7 @@ process.on('message', function(message) {
         break;
       }
       request('http://localhost:3000/servicio/informacion',
-        function(error, response, body) {
+        (error, response, body) => {
           if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
             if (info[message.candidato]) {
@@ -202,7 +202,7 @@ process.on('message', function(message) {
  * @param  {object} message Mensaje enviado por el emisor
  * @return {undefined} No devuelve nada
  */
-myEmitter.on('eleccion', function(message) {
+myEmitter.on('eleccion', (message) => {
   switch (message.cmd) {
     case 'eleccion':
       if (process.env.eleccion === 'ACUERDO') {
