@@ -7,13 +7,13 @@ block content
     div(ng-app="myApp" ng-controller="gestor")
       p.lead IP DEL SERVIDOR:
         input(ng-model="servidor")
-      h1 {{servidor}}
       button.btn-primary(ng-click="guardarServidor(servidor)") añadir
       div(ng-show="mostrar" ng-repeat="x in servArray track by $index")
-        p.lead {{x}} PROCESO:
+        p.lead {{x.servidor}} PROCESO:
         input(ng-model="pro")
+          button.btn-primary(ng-click="crear(pro, $index)") crear
         div(ng-show="mostrar2" ng-repeat="a in x.procesos track by $index")
-          p.lead{{a}}
+          p.lead{{a.id}}
           button.btn-success(ng-click="arrancar(a, $index)") arrancar
           button.btn-danger(ng-click="parar(a, $index)") parar
 
@@ -22,3 +22,4 @@ block content
   link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
   script(src="javascripts/controllers/gestor.js")
+
