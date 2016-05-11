@@ -1,38 +1,31 @@
 var app = angular.module('myApp', []);
 
-app.controller('servidor', function($scope, $http) {
-  $scope.ip = "ip";
-  $scope.pro = "proceso";
-  $scope.mostrar = false;
-  $scope.mostrar2 = false;
+app.controller('gestor', function($scope, $http) {
+
   $scope.servidores = [];
   
 
-  $scope.guardarServidor = function(ip){
-    $scope.servidores.push({servidor: ip,
-          procesos: []});
-    $scope.mostrar = true;
-
-    
+  $scope.guardarServidor = function(servidor){
+    $scope.servidores.push({servidor: servidor,
+          procesos: []}); 
   };
 
-  $scope.crear = function(pro, index){
-    $scope.servidores[index].procesos.push({id:pro});
+  $scope.crear = function(pro, servidor){
+    servidor.procesos.push({id:pro});
     $http({
       method:'GET',
-      url: "http://"+ $scope.servidores[index].servidor +"/servicio/informacion",
+      url: "http://"+ servidor.servidor +"/servicio/informacion",
     }).then(function successCallback(response) {
       console.log(response.data);
     }, function errorCallback(response){
     });
-    $scope.mostrar2 = true;
-  };
+  }
 
-  $scope.arrancar = function(pro, index){
+  $scope.arrancar = function(pro, servidor){
     
     $http({
       method:'GET',
-      url: "http://"+ $scope.ipArray[index].servidor +"/servicio/arrancar",
+      url: "http://"+ servidor +"/servicio/arrancar",
       params: {id: pro},
     }).then(function successCallback(response) {
       console.log(response.data);
@@ -41,10 +34,10 @@ app.controller('servidor', function($scope, $http) {
 
   };
 
-  $scope.parar = function(pro, index){
+  $scope.parar = function(pro, servidor){
     $http({
       method:'GET',
-      url: "http://"+ $scope.ipArray[index].servidor +"/servicio/parar",
+      url: "http://"+ servidor +"/servicio/parar",
       params: {id: pro},
     }).then(function successCallback(response) {
       console.log(response.data);

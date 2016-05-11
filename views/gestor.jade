@@ -6,16 +6,17 @@ block content
       h1= title
     div(ng-app="myApp" ng-controller="gestor")
       p.lead IP DEL SERVIDOR:
-        input(ng-model="servidor")
+        input(placeholder="localhost:3000" ng-model="servidor")
       button.btn-primary(ng-click="guardarServidor(servidor)") añadir
-      div(ng-show="mostrar" ng-repeat="x in servArray track by $index")
-        p.lead {{x.servidor}} PROCESO:
-        input(ng-model="pro")
-          button.btn-primary(ng-click="crear(pro, $index)") crear
-        div(ng-show="mostrar2" ng-repeat="a in x.procesos track by $index")
-          p.lead{{a.id}}
-          button.btn-success(ng-click="arrancar(a, $index)") arrancar
-          button.btn-danger(ng-click="parar(a, $index)") parar
+      div(ng-repeat="servidor in servidores track by $index")
+        h1 {{servidor.servidor}}
+        p.lead PROCESO:
+          input(placeholder="1" ng-model="pro")
+          button.btn-primary(ng-click="crear(pro, servidor)") crear
+        div(ng-repeat="proceso in servidor.procesos track by $index")
+          p.lead {{proceso.id}}
+            button.btn-success(ng-click="arrancar(proceso.id, servidor.servidor)") arrancar
+            button.btn-danger(ng-click="parar(proceso.id, servidor.servidor)") parar
 
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
