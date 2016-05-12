@@ -38,7 +38,7 @@ router.get('/arrancar', (req, res) => {
       }
     };
     var child = child_process.fork('process/proceso.js', [], options);
-    informacion[req.query.id] = 'localhost:3000';
+    informacion[req.query.id] = req.hostname + ':3000';
     procesos[req.query.id] = child;
     child.send({
       cmd: 'arrancar'
