@@ -117,6 +117,8 @@ router.get('/ok', (req, res) => {
 router.get('/informacion', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
+  } else if (req.query.self) {
+    res.send(JSON.stringify(procesos));
   } else if (procesos[req.query.id]) {
     procesos[req.query.id].once('message', (m) => {
       res.send(m);
