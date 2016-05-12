@@ -6,8 +6,25 @@ app.controller('gestor', function($scope, $http) {
   
 
   $scope.guardarServidor = function(servidor){
-    $scope.servidores.push({servidor: servidor,
-          procesos: []}); 
+    var tmp = {
+      servidor: servidor,
+      procesos: []
+    };
+    $http({
+      method:'GET',
+      url: "http://"+ servidor.servidor +"/servicio/informacion",
+    }).then(function successCallback(response) {
+      console.log(response.data);
+      var informacion = JASON.parse(response.data);
+      informacion.procesos.foreach(function(value){
+        tmp.procesos.push({
+          id: value
+        });
+      });
+      $scope.servidores.push(tmp);
+    }, function errorCallback(response){
+    });
+
   };
 
   $scope.crear = function(pro, servidor){
