@@ -119,7 +119,7 @@ router.get('/informacion', (req, res) => {
     res.send(JSON.stringify(informacion));
   } else if (req.query.self) {
     var info = {
-      procesos = [];
+      procesos = []
     };
     for (var key in procesos) {
       if (procesos.hasOwnProperty(key)) {
