@@ -14,7 +14,7 @@ block content
           input(placeholder="1" ng-model="pro")
           button.btn-primary(ng-click="crear(pro, servidor)") crear
         div(ng-repeat="proceso in servidor.procesos track by $index")
-          p.lead {{proceso}}
+          p.lead {{proceso}} {{info[proceso]}}
             button.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
             button.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
 
