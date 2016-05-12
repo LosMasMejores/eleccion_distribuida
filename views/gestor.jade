@@ -14,9 +14,9 @@ block content
           input(placeholder="1" ng-model="pro")
           button.btn-primary(ng-click="crear(pro, servidor)") crear
         div(ng-repeat="proceso in servidor.procesos track by $index")
-          p.lead {{proceso.id}}
-            button.btn-success(ng-click="arrancar(proceso.id, servidor.servidor)") arrancar
-            button.btn-danger(ng-click="parar(proceso.id, servidor.servidor)") parar
+          p.lead {{proceso}}
+            button.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
+            button.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
 
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
