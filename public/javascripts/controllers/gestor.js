@@ -12,7 +12,7 @@ app.controller('gestor', function($scope, $http) {
     };
     $http({
       method:'GET',
-      url: "http://"+ servidor.servidor +"/servicio/informacion",
+      url: "http://"+ tmp.servidor +"/servicio/informacion",
     }).then(function successCallback(response) {
       console.log(response.data);
       var informacion = JASON.parse(response.data);
