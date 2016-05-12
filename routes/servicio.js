@@ -118,7 +118,15 @@ router.get('/informacion', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (req.query.self) {
-    res.send(JSON.stringify(procesos));
+    var info = {
+      procesos = [];
+    };
+    for (var key in procesos) {
+      if (procesos.hasOwnProperty(key)) {
+        info.procesos.push(key);
+      }
+    }
+    res.send(JSON.stringify(info));
   } else if (procesos[req.query.id]) {
     procesos[req.query.id].once('message', (m) => {
       res.send(m);
