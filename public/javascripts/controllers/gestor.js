@@ -17,9 +17,9 @@ app.controller('gestor', function($scope, $http) {
         servidor: servidor,
         procesos: response.data.procesos
       });
-      response.data.procesos.forEach(function(value {
+      response.data.procesos.forEach(function(value) {
         info{value} = infoProcesos(value, servidor);
-      }));
+      });
     }, function errorCallback(response) {});
   };
 
