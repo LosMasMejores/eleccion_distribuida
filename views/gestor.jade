@@ -5,25 +5,37 @@ block content
     div.jumbotron
       h1= title
     div(ng-app="myApp" ng-controller="gestor")
-      p.lead IP DEL SERVIDOR:
-        input(placeholder="localhost:3000" ng-model="servidor")
-      button.btn-primary(ng-click="guardarServidor(servidor)") añadir
-      div(ng-repeat="servidor in servidores track by $index")
-        h1 {{servidor.servidor}}
-        p.lead PROCESO:
-          input(placeholder="1" ng-model="pro")
-          button.btn-primary(ng-click="crear(pro, servidor)") crear
-          table.table
-            tbody(ng-repeat="proceso in servidor.procesos track by $index")
-              tr
-                td(style="width: 10%") {{proceso}}
-                td(style="width: 20%")
-                  button.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
-                td(style="width: 20%")
-                  button.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
-                td(style="width: 10%") {{info[proceso].coordinador}}
-                td(style="width: 20%") {{info[proceso].eleccion}}
-                td(style="width: 20%") {{info[proceso].estado}}
+      form.form-inline(role="form")
+        div.form-group
+          label IP DEL SERVIDOR:
+          input(placeholder="192.0  168.0 1.1:3000" ng-model="servidor" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{1,4}" required)
+        button.btn-primary(type="submit" ng-click="guardarServidor(servidor)") añadir
+      div.container(ng-repeat="servidor in servidores track by $index")
+        h1.text-center {{servidor.servidor}}
+        form.form-inline(role="form")
+          div.form-group
+            label PROCESO:
+            input(placeholder="1" ng-model="pro" required)
+          button.btn-primary(type="submit" ng-click="crear(pro, servidor)") crear
+        table.table.table-hover
+          thead
+            tr
+              th Id proceso
+              th
+              th
+              th Coordinador
+              th Estado Elección
+              th Estado proceso
+          tbody(ng-repeat="proceso in servidor.procesos track by $index")
+            tr
+              td {{proceso}}
+              td
+                button.btn.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
+              td
+                button.btn.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
+              td {{infoProcesos[proceso].coordinador}}
+              td {{infoProcesos[proceso].eleccion}}
+              td {{infoProcesos[proceso].estado}}
 
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js")
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")

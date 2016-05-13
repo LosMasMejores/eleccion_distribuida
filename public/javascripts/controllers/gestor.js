@@ -1,11 +1,14 @@
 var app = angular.module('myApp', []);
 
 
-app.controller('gestor', function($scope, $http) {
+app.controller('gestor', function($scope, $http, $interval) {
   $scope.servidores = [];
   $scope.infoProcesos = {};
 
   $scope.guardarServidor = function(servidor) {
+    if (servidor.split(':')[0] === '127.0.0.1') {
+      return;
+    }
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/informacion",
@@ -96,7 +99,7 @@ app.controller('gestor', function($scope, $http) {
     }, function errorCallback(response) {});
   }
 
-  /*setInterval(function(){
+  /*$interval(function(){
     $scope.servidores.forEach(function(servidor){
       servidor.procesos.forEach(function(idProceso){
         getInfo(idProceso, servidor.servidor);
