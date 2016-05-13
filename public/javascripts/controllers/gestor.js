@@ -2,7 +2,7 @@ var app = angular.module('myApp', []);
 
 app.controller('gestor', function($scope, $http) {
   $scope.servidores = [];
-  var info = {};
+  $scope.info = {};
 
   $scope.guardarServidor = function(servidor) {
     $http({
@@ -18,7 +18,7 @@ app.controller('gestor', function($scope, $http) {
         procesos: response.data.procesos
       });
       response.data.procesos.forEach(function(value) {
-        info[value] = infoProcesos(value, servidor);
+        infoProcesos(value, servidor);
       });
     }, function errorCallback(response) {});
   };
@@ -42,6 +42,7 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
+      infoProcesos(pro, servidor);
     }, function errorCallback(response) {});
   };
 
@@ -54,6 +55,7 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
+      infoProcesos(pro, servidor);
     }, function errorCallback(response) {});
   };
 
@@ -66,7 +68,15 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      return response.data;
+      $scope.info[pro] = response.data;
     }, function errorCallback(response) {});
   }
+
+  setInterval(function(){
+    $scope.servidores.forEach(function(serv){
+      serv.procesos.forEach(function(pro){
+        infoProcesos(pro, serv.servidor);
+      });
+    });
+  }, 1000);
 });
