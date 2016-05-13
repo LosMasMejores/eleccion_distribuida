@@ -1,8 +1,9 @@
 var app = angular.module('myApp', []);
 
+
 app.controller('gestor', function($scope, $http) {
   $scope.servidores = [];
-  $scope.info = {};
+  $scope.infoProcesos = {};
 
   $scope.guardarServidor = function(servidor) {
     $http({
@@ -18,7 +19,7 @@ app.controller('gestor', function($scope, $http) {
         procesos: response.data.procesos
       });
       response.data.procesos.forEach(function(value) {
-        infoProcesos(value, servidor);
+        getInfo(value, servidor);
       });
     }, function errorCallback(response) {});
   };
@@ -30,9 +31,9 @@ app.controller('gestor', function($scope, $http) {
       url: "http://" + servidor.servidor + "/servicio/informacion",
     }).then(function successCallback(response) {
       console.log(response.data);
-      $scope.servidores.forEach(function(value){
-        if(value.servidor != servidor.servidor){
-          infoPost(pro, value.servidor, servidor.servidor);
+      $scope.servidores.forEach(function(value) {
+        if (value.servidor != servidor.servidor) {
+          postInfo(pro, value.servidor, servidor.servidor);
         }
       })
     }, function errorCallback(response) {});
@@ -47,7 +48,7 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      infoProcesos(pro, servidor);
+      getInfo(pro, servidor);
     }, function errorCallback(response) {});
   };
 
@@ -60,11 +61,11 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      infoProcesos(pro, servidor);
+      getInfo(pro, servidor);
     }, function errorCallback(response) {});
   };
 
-  var infoProcesos = function(pro, servidor) {
+  var getInfo = function(pro, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/informacion",
@@ -73,14 +74,14 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      $scope.info[pro] = response.data;
+      $scope.infoProcesos[pro] = response.data;
     }, function errorCallback(response) {});
   }
 
-  var infoPost = function(pro, serv, host){
+  var postInfo = function(pro, servidor, host) {
     $http({
       method: 'POST',
-      url: "http://" + serv + "/servicio/informacion",
+      url: "http://" + servidor + "/servicio/informacion",
       data: {
         servidor: host,
         id: pro
@@ -91,11 +92,10 @@ app.controller('gestor', function($scope, $http) {
   }
 
   /*setInterval(function(){
-    $scope.servidores.forEach(function(serv){
-      serv.procesos.forEach(function(pro){
-        infoProcesos(pro, serv.servidor);
+    $scope.servidores.forEach(function(servidor){
+      servidor.procesos.forEach(function(pro){
+        getInfo(pro, servidor.servidor);
       });
     });
   }, 5000);*/
-
 });
