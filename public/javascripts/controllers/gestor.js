@@ -32,7 +32,7 @@ app.controller('gestor', function($scope, $http) {
       console.log(response.data);
       $scope.servidores.forEach(function(value){
         if(value.servidor != servidor.servidor){
-          infoPost(pro, servidor.servidor);
+          infoPost(pro, value.servidor, servidor.servidor);
         }
       })
     }, function errorCallback(response) {});
@@ -77,12 +77,12 @@ app.controller('gestor', function($scope, $http) {
     }, function errorCallback(response) {});
   }
 
-  var infoPost = function(pro, serv){
+  var infoPost = function(pro, serv, host){
     $http({
       method: 'POST',
       url: "http://" + serv + "/servicio/informacion",
       data: {
-        servidor: serv,
+        servidor: host,
         id: pro
       },
     }).then(function successCallback(response) {
