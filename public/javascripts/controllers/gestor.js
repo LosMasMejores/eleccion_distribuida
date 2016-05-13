@@ -72,11 +72,11 @@ app.controller('gestor', function($scope, $http) {
     }, function errorCallback(response) {});
   }
 
-  setInterval(function(){
+  /*setInterval(function(){
     $scope.servidores.forEach(function(serv){
       serv.procesos.forEach(function(pro){
         infoProcesos(pro, serv.servidor);
       });
     });
-  }, 1000);
+  }, 5000);*/
 });

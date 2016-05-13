@@ -13,16 +13,17 @@ block content
         p.lead PROCESO:
           input(placeholder="1" ng-model="pro")
           button.btn-primary(ng-click="crear(pro, servidor)") crear
-          div(ng-repeat="proceso in servidor.procesos track by $index")
-            form.form-inline(role="form")
-              div.form-group
-                label {{proceso}} 
-                button.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
-              div.form-group
-                button.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
-                label {{info[proceso].coordinador}}
-                label {{info[proceso].eleccion}}
-                label {{info[proceso].estado}}
+          table.table
+            tbody(ng-repeat="proceso in servidor.procesos track by $index")
+              tr
+                td(style="width: 10%") {{proceso}}
+                td(style="width: 20%")
+                  button.btn-success(ng-click="arrancar(proceso, servidor.servidor)") arrancar
+                td(style="width: 20%")
+                  button.btn-danger(ng-click="parar(proceso, servidor.servidor)") parar
+                td(style="width: 10%") {{info[proceso].coordinador}}
+                td(style="width: 20%") {{info[proceso].eleccion}}
+                td(style="width: 20%") {{info[proceso].estado}}
 
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js")
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
