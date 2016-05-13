@@ -32,7 +32,7 @@ app.controller('gestor', function($scope, $http) {
       console.log(response.data);
       $scope.servidores.forEach(function(value){
         if(value.servidor != servidor.servidor){
-          infoPost(pro, value.servidor);
+          infoPost(pro, servidor.servidor);
         }
       })
     }, function errorCallback(response) {});
