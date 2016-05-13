@@ -14,6 +14,11 @@ app.controller('gestor', function($scope, $http) {
       },
     }).then(function successCallback(response) {
       console.log(response.data);
+      $scope.servidores.forEach(function(value) {
+        value.procesos.forEach(function(subValue) {
+          postInfo(subValue, servidor, value.servidor);
+        });
+      });
       $scope.servidores.push({
         servidor: servidor,
         procesos: response.data.procesos
@@ -24,8 +29,8 @@ app.controller('gestor', function($scope, $http) {
     }, function errorCallback(response) {});
   };
 
-  $scope.crear = function(pro, servidor) {
-    servidor.procesos.push(pro);
+  $scope.crear = function(idProceso, servidor) {
+    servidor.procesos.push(idProceso);
     $http({
       method: 'GET',
       url: "http://" + servidor.servidor + "/servicio/informacion",
@@ -33,58 +38,58 @@ app.controller('gestor', function($scope, $http) {
       console.log(response.data);
       $scope.servidores.forEach(function(value) {
         if (value.servidor != servidor.servidor) {
-          postInfo(pro, value.servidor, servidor.servidor);
+          postInfo(idProceso, value.servidor, servidor.servidor);
         }
       })
     }, function errorCallback(response) {});
   }
 
-  $scope.arrancar = function(pro, servidor) {
+  $scope.arrancar = function(idProceso, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/arrancar",
       params: {
-        id: pro
+        id: idProceso
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      getInfo(pro, servidor);
+      getInfo(idProceso, servidor);
     }, function errorCallback(response) {});
   };
 
-  $scope.parar = function(pro, servidor) {
+  $scope.parar = function(idProceso, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/parar",
       params: {
-        id: pro
+        id: idProceso
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      getInfo(pro, servidor);
+      getInfo(idProceso, servidor);
     }, function errorCallback(response) {});
   };
 
-  var getInfo = function(pro, servidor) {
+  var getInfo = function(idProceso, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/informacion",
       params: {
-        id: pro
+        id: idProceso
       },
     }).then(function successCallback(response) {
       console.log(response.data);
-      $scope.infoProcesos[pro] = response.data;
+      $scope.infoProcesos[idProceso] = response.data;
     }, function errorCallback(response) {});
   }
 
-  var postInfo = function(pro, servidor, host) {
+  var postInfo = function(idProceso, servidor, host) {
     $http({
       method: 'POST',
       url: "http://" + servidor + "/servicio/informacion",
       data: {
         servidor: host,
-        id: pro
+        id: idProceso
       },
     }).then(function successCallback(response) {
       console.log(response.data);
@@ -93,8 +98,8 @@ app.controller('gestor', function($scope, $http) {
 
   /*setInterval(function(){
     $scope.servidores.forEach(function(servidor){
-      servidor.procesos.forEach(function(pro){
-        getInfo(pro, servidor.servidor);
+      servidor.procesos.forEach(function(idProceso){
+        getInfo(idProceso, servidor.servidor);
       });
     });
   }, 5000);*/
