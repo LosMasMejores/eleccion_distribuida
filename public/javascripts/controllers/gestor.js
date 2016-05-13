@@ -30,6 +30,11 @@ app.controller('gestor', function($scope, $http) {
       url: "http://" + servidor.servidor + "/servicio/informacion",
     }).then(function successCallback(response) {
       console.log(response.data);
+      $scope.servidores.forEach(function(value){
+        if(value.servidor != servidor.servidor){
+          infoPost(pro, value.servidor);
+        }
+      })
     }, function errorCallback(response) {});
   }
 
@@ -72,6 +77,19 @@ app.controller('gestor', function($scope, $http) {
     }, function errorCallback(response) {});
   }
 
+  var infoPost = function(pro, serv){
+    $http({
+      method: 'POST',
+      url: "http://" + serv + "/servicio/informacion",
+      data: {
+        servidor: serv,
+        id: pro
+      },
+    }).then(function successCallback(response) {
+      console.log(response.data);
+    }, function errorCallback(response) {});
+  }
+
   /*setInterval(function(){
     $scope.servidores.forEach(function(serv){
       serv.procesos.forEach(function(pro){
@@ -79,4 +97,5 @@ app.controller('gestor', function($scope, $http) {
       });
     });
   }, 5000);*/
+
 });
