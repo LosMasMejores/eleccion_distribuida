@@ -140,6 +140,19 @@ router.get('/informacion', (req, res) => {
 });
 
 
+router.post('/informacion', (req, res) => {
+  if (req.body.id && req.body.servidor) {
+    informacion[req.body.id] = req.body.servidor;
+    console.log(informacion);
+    res.send(JSON.stringify({
+      status: "saved"
+    }))
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+
 router.get('/coordinador', (req, res) => {
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
