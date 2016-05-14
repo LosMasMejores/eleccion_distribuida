@@ -8,6 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+var raiz = require('./routes/raiz');
 var servicio = require('./routes/servicio');
 var gestor = require('./routes/gestor');
 
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', raiz);
 app.use('/servicio', servicio);
 app.use('/gestor', gestor);
 

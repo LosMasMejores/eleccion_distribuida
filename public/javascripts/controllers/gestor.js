@@ -106,5 +106,5 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
         getInfo(idProceso, servidor.servidor);
       });
     });
-  }, 5000);
+  }, 1000);
 }]);
