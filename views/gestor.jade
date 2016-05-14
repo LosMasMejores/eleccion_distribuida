@@ -15,7 +15,7 @@ block content
         form.form-inline(role="form")
           div.form-group
             label PROCESO:
-            input(placeholder="1" ng-model="pro" required)
+            input(placeholder="1" ng-model="pro" pattern="[0-9]{1,4}" required)
           button.btn-primary(type="submit" ng-click="crear(pro, servidor)") crear
         table.table.table-hover
           thead
@@ -42,4 +42,3 @@ block content
   link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
   script(src="javascripts/controllers/gestor.js")
-

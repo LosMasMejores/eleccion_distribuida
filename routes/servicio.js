@@ -14,11 +14,13 @@ var informacion = {};
 
 
 router.get('/', (req, res) => {
+  "use strict";
   res.send('API servicio');
 });
 
 
 router.get('/arrancar', (req, res) => {
+  "use strict";
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -51,6 +53,7 @@ router.get('/arrancar', (req, res) => {
 
 
 router.get('/parar', (req, res) => {
+  "use strict";
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -67,6 +70,7 @@ router.get('/parar', (req, res) => {
 
 
 router.get('/computar', (req, res) => {
+  "use strict";
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -84,6 +88,7 @@ router.get('/computar', (req, res) => {
 
 
 router.get('/eleccion', (req, res) => {
+  "use strict";
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -100,6 +105,7 @@ router.get('/eleccion', (req, res) => {
 
 
 router.get('/ok', (req, res) => {
+  "use strict";
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -115,6 +121,7 @@ router.get('/ok', (req, res) => {
 
 
 router.get('/informacion', (req, res) => {
+  "use strict";
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (req.query.self) {
@@ -141,12 +148,13 @@ router.get('/informacion', (req, res) => {
 
 
 router.post('/informacion', (req, res) => {
+  "use strict";
   if (req.body.id && req.body.servidor) {
     informacion[req.body.id] = req.body.servidor;
     console.log(informacion);
     res.send(JSON.stringify({
       status: "saved"
-    }))
+    }));
   } else {
     res.sendStatus(400);
   }
@@ -154,6 +162,7 @@ router.post('/informacion', (req, res) => {
 
 
 router.get('/coordinador', (req, res) => {
+  "use strict";
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {

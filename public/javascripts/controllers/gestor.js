@@ -2,6 +2,7 @@ var app = angular.module('myApp', []);
 
 
 app.controller('gestor', function($scope, $http, $interval) {
+  "use strict";
   $scope.servidores = [];
   $scope.infoProcesos = {};
 
