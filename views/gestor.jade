@@ -7,11 +7,11 @@ block content
     div(ng-app="myApp" ng-controller="gestor")
       form.form-inline(role="form" ng-submit="guardarServidor(servidor)")
         div.form-group
-          label IP DEL SERVIDOR:
+          label SERVIDOR:
           input(type="text" placeholder="192.168.1.1:3000" ng-model="servidor" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{1,4}" required)
         button.btn-primary(type="submit") Añadir
       div.container(ng-repeat="servidor in servidores track by $index")
-        h1.text-center {{servidor.servidor}}
+        h1 Servidor: {{servidor.servidor}}
         form.form-inline(role="form" ng-submit="crear(idProceso, servidor)")
           div.form-group
             label PROCESO:
@@ -20,12 +20,12 @@ block content
         table.table.table-hover
           thead
             tr
-              th Id proceso
+              th Id Proceso
               th
               th
               th Coordinador
               th Estado Elección
-              th Estado proceso
+              th Estado Proceso
           tbody(ng-repeat="proceso in servidor.procesos track by $index")
             tr
               td {{proceso}}
