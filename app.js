@@ -1,5 +1,8 @@
 /*jslint node: true */
 
+/*
+Dependencias
+ */
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
@@ -8,12 +11,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+/*
+Enrutadores
+ */
 var raiz = require('./routes/raiz');
 var servicio = require('./routes/servicio');
 var gestor = require('./routes/gestor');
 
 var app = express();
 
+/*
+Habilitar CORS
+ */
 app.use(cors());
 
 // view engine setup
@@ -30,6 +39,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
+Establecer rutas
+ */
 app.use('/', raiz);
 app.use('/servicio', servicio);
 app.use('/gestor', gestor);
