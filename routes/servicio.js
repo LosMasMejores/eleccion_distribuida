@@ -8,7 +8,9 @@ var express = require('express');
 var router = express.Router();
 
 var child_process = require('child_process');
+var EventEmitter = require('events');
 
+var myEmitter = new EventEmitter();
 var procesos = {};
 var informacion = {};
 
@@ -40,6 +42,16 @@ router.get('/arrancar', (req, res) => {
       }
     };
     var child = child_process.fork('process/proceso.js', [], options);
+    child.on('message', (m) => {
+      switch (m.cmd) {
+        case 'info':
+          myEmitter.emit(m.id, m.info);
+          break;
+        case 'computar':
+          myEmitter.emit('computar', m.computar);
+          break;
+      }
+    });
     informacion[req.query.id] = req.hostname + ':3000';
     procesos[req.query.id] = child;
     child.send({
@@ -75,7 +87,7 @@ router.get('/computar', (req, res) => {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
     var child = procesos[req.query.id];
-    child.once('message', (m) => {
+    myEmitter.once('computar', (m) => {
       res.send(m);
     });
     child.send({
@@ -135,10 +147,11 @@ router.get('/informacion', (req, res) => {
     }
     res.send(JSON.stringify(info));
   } else if (procesos[req.query.id]) {
-    procesos[req.query.id].once('message', (m) => {
+    var child = procesos[req.query.id];
+    myEmitter.once(req.query.id, (m) => {
       res.send(m);
     });
-    procesos[req.query.id].send({
+    child.send({
       cmd: 'informacion'
     });
   } else {
@@ -177,6 +190,5 @@ router.get('/coordinador', (req, res) => {
     res.sendStatus(400);
   }
 });
-
 
 module.exports = router;

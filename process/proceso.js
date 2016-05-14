@@ -62,13 +62,19 @@ var computar = () => {
   console.log(process.env.id + ' computar()');
   if (process.env.estado === 'PARADO') {
     process.send({
-      resultado: -1
+      cmd: "computar",
+      computar: {
+        resultado: -1
+      }
     });
     return -1;
   } else {
     setTimeout(() => {
       process.send({
-        resultado: 1
+        cmd: "computar",
+        computar: {
+          resultado: 1
+        }
       });
       return 1;
     }, parseInt(Math.random() * 200) + 100);
@@ -162,6 +168,7 @@ process.on('message', (message) => {
         break;
       }
       process.env.estado = 'CORRIENDO';
+      process.env.coordinador = 0;
       async.forever(run, (err) => {
         console.log(err);
       });
@@ -173,10 +180,11 @@ process.on('message', (message) => {
       _.defer(computar);
       break;
     case 'informacion':
-      process.emit('informacion', {
-        informacion: process.env
+      process.send({
+        cmd: "info",
+        id: process.env.id,
+        info: process.env
       });
-      process.send(process.env);
       break;
     case 'eleccion':
       if (process.env.estado === 'PARADO') {

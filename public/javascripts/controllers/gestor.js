@@ -1,7 +1,7 @@
 var app = angular.module('myApp', []);
 
 
-app.controller('gestor', function($scope, $http, $interval) {
+app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
   "use strict";
   $scope.servidores = [];
   $scope.infoProcesos = {};
@@ -100,11 +100,11 @@ app.controller('gestor', function($scope, $http, $interval) {
     }, function errorCallback(response) {});
   };
 
-  /*$interval(function(){
+  $interval(function(){
     $scope.servidores.forEach(function(servidor){
       servidor.procesos.forEach(function(idProceso){
         getInfo(idProceso, servidor.servidor);
       });
     });
-  }, 5000);*/
-});
+  }, 5000);
+}]);
