@@ -113,9 +113,9 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
   /*
   Actualizar la informacion de los procesos
    */
-  $interval(function(){
-    $scope.servidores.forEach(function(servidor){
-      servidor.procesos.forEach(function(idProceso){
+  $interval(function() {
+    $scope.servidores.forEach(function(servidor) {
+      servidor.procesos.forEach(function(idProceso) {
         getInfo(idProceso, servidor.servidor);
       });
     });
