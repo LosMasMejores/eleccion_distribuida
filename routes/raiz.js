@@ -9,7 +9,7 @@ var router = express.Router();
 
 // Las peticiones a la raiz las enrutamos a /gestor
 router.get('/', (req, res) => {
-  "use strict";
+  'use strict';
   res.redirect('/gestor');
 });
 

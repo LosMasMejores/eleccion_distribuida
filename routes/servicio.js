@@ -18,7 +18,7 @@ var informacion = {};
 Descripcion del servicio
  */
 router.get('/', (req, res) => {
-  "use strict";
+  'use strict';
   res.send('API servicio');
 });
 
@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
 Arrancar un proceso
  */
 router.get('/arrancar', (req, res) => {
-  "use strict";
+  'use strict';
   if (isNaN(req.query.id) || !req.query.id) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -71,7 +71,7 @@ router.get('/arrancar', (req, res) => {
 Parar un proceso
  */
 router.get('/parar', (req, res) => {
-  "use strict";
+  'use strict';
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -90,7 +90,7 @@ router.get('/parar', (req, res) => {
 Obtener el reultado de la computacion de un proceso
  */
 router.get('/computar', (req, res) => {
-  "use strict";
+  'use strict';
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -109,7 +109,7 @@ router.get('/computar', (req, res) => {
 Iniciar el proceso de eleccion de un proceso
  */
 router.get('/eleccion', (req, res) => {
-  "use strict";
+  'use strict';
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -129,7 +129,7 @@ router.get('/eleccion', (req, res) => {
 Enviar mensaje OK
  */
 router.get('/ok', (req, res) => {
-  "use strict";
+  'use strict';
   if (isNaN(req.query.id)) {
     res.sendStatus(400);
   } else if (procesos[req.query.id]) {
@@ -191,12 +191,12 @@ router.get('/informacion/:option', (req, res) => {
 Enviar informacion al servidor
  */
 router.post('/informacion', (req, res) => {
-  "use strict";
+  'use strict';
   if (req.body.id && req.body.servidor) {
     informacion[req.body.id] = req.body.servidor;
     console.log(informacion);
     res.send(JSON.stringify({
-      status: "saved"
+      status: 'saved'
     }));
   } else {
     res.sendStatus(400);
@@ -207,7 +207,7 @@ router.post('/informacion', (req, res) => {
 Enviar el coordinador a un proceso
  */
 router.get('/coordinador', (req, res) => {
-  "use strict";
+  'use strict';
   if (Object.keys(req.query).length === 0) {
     res.send(JSON.stringify(informacion));
   } else if (procesos[req.query.id]) {

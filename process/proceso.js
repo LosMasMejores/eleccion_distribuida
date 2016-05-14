@@ -20,16 +20,22 @@ var myEmitter = new EventEmitter();
  * @return {undefined} No devuelve ningun valor, solo sirve para asegurarse se que no se continua
  */
 var run = (next) => {
-  "use strict";
+  'use strict';
   console.log(process.env.id + ' run()');
   if (process.env.estado === 'PARADO') {
     return next(process.env.id + ' run() PARADO');
   }
-  setTimeout(() => {
+  _.delay(() => {
     request('http://localhost:3000/servicio/informacion',
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
           var server = JSON.parse(body)[process.env.coordinador];
+          if (!server) {
+            myEmitter.emit('eleccion', {
+              cmd: 'eleccion'
+            });
+            return next();
+          }
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             (error, response, body) => {
               if (!error && response.statusCode === 200) {
@@ -58,11 +64,11 @@ var run = (next) => {
  * @return {number} Resultado de la operacion
  */
 var computar = () => {
-  "use strict";
+  'use strict';
   console.log(process.env.id + ' computar()');
   if (process.env.estado === 'PARADO') {
     process.send({
-      cmd: "computar",
+      cmd: 'computar',
       computar: {
         resultado: -1
       }
@@ -71,7 +77,7 @@ var computar = () => {
   } else {
     setTimeout(() => {
       process.send({
-        cmd: "computar",
+        cmd: 'computar',
         computar: {
           resultado: 1
         }
@@ -87,7 +93,7 @@ var computar = () => {
  * @return {undefined} No devuelve nada
  */
 var eleccionActiva = () => {
-  "use strict";
+  'use strict';
   console.log(process.env.id + ' eleccionActiva()');
   request('http://localhost:3000/servicio/informacion',
     (error, response, body) => {
@@ -121,7 +127,7 @@ var eleccionActiva = () => {
  * @return {undefined} No devuelve nada
  */
 var eleccionPasiva = () => {
-  "use strict";
+  'use strict';
   console.log(process.env.id + ' eleccionPasiva()');
   pasiva_timeout = setTimeout(() => {
     myEmitter.emit('eleccion', {
@@ -136,7 +142,7 @@ var eleccionPasiva = () => {
  * @return {undefined} No devuelve nada
  */
 var avisar = () => {
-  "use strict";
+  'use strict';
   console.log(process.env.id + ' avisar()');
   request('http://localhost:3000/servicio/informacion',
     (error, response, body) => {
@@ -161,7 +167,7 @@ var avisar = () => {
  * @return {undefined} No devuelve nada
  */
 process.on('message', (message) => {
-  "use strict";
+  'use strict';
   switch (message.cmd) {
     case 'arrancar':
       if (process.env.estado === 'CORRIENDO') {
@@ -181,7 +187,7 @@ process.on('message', (message) => {
       break;
     case 'informacion':
       process.send({
-        cmd: "info",
+        cmd: 'info',
         id: process.env.id,
         info: process.env
       });
@@ -217,7 +223,7 @@ process.on('message', (message) => {
  * @return {undefined} No devuelve nada
  */
 myEmitter.on('eleccion', (message) => {
-  "use strict";
+  'use strict';
   switch (message.cmd) {
     case 'eleccion':
       if (process.env.eleccion === 'ACUERDO') {

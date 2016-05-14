@@ -2,7 +2,7 @@ var app = angular.module('myApp', []);
 
 
 app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
-  "use strict";
+  'use strict';
   $scope.servidores = [];
   $scope.infoProcesos = {};
 
@@ -15,7 +15,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
     }
     $http({
       method: 'GET',
-      url: "http://" + servidor + "/servicio/informacion/self",
+      url: 'http://' + servidor + '/servicio/informacion/self',
     }).then(function successCallback(response) {
       console.log(response.data);
       $scope.servidores.forEach(function(value) {
@@ -47,7 +47,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
   $scope.arrancarProceso = function(idProceso, servidor) {
     $http({
       method: 'GET',
-      url: "http://" + servidor + "/servicio/arrancar",
+      url: 'http://' + servidor + '/servicio/arrancar',
       params: {
         id: idProceso
       },
@@ -68,7 +68,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
   $scope.pararProceso = function(idProceso, servidor) {
     $http({
       method: 'GET',
-      url: "http://" + servidor + "/servicio/parar",
+      url: 'http://' + servidor + '/servicio/parar',
       params: {
         id: idProceso
       },
@@ -84,7 +84,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
   var getInfo = function(idProceso, servidor) {
     $http({
       method: 'GET',
-      url: "http://" + servidor + "/servicio/informacion/proceso",
+      url: 'http://' + servidor + '/servicio/informacion/proceso',
       params: {
         id: idProceso
       },
@@ -100,7 +100,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
   var postInfo = function(idProceso, servidor, host) {
     $http({
       method: 'POST',
-      url: "http://" + servidor + "/servicio/informacion",
+      url: 'http://' + servidor + '/servicio/informacion',
       data: {
         servidor: host,
         id: idProceso

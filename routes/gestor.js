@@ -9,7 +9,7 @@ var router = express.Router();
 
 // GET de la pagina gestor
 router.get('/', (req, res) => {
-  "use strict";
+  'use strict';
   res.render('gestor', {
     title: 'Eleccion Distribuida'
   });
