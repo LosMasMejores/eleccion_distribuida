@@ -14,7 +14,7 @@ var cors = require('cors');
 /*
 Enrutadores
  */
-var raiz = require('./routes/raiz');
+var index = require('./routes/index');
 var servicio = require('./routes/servicio');
 var gestor = require('./routes/gestor');
 
@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*
 Establecer rutas
  */
-app.use('/', raiz);
+app.use('/', index);
 app.use('/servicio', servicio);
 app.use('/gestor', gestor);
 
