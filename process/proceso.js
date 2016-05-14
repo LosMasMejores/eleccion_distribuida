@@ -26,7 +26,7 @@ var run = (next) => {
     return next(process.env.id + ' run() PARADO');
   }
   _.delay(() => {
-    request('http://localhost:3000/servicio/informacion',
+    request('/servicio/informacion',
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
           var server = JSON.parse(body)[process.env.coordinador];
@@ -95,7 +95,7 @@ var computar = () => {
 var eleccionActiva = () => {
   'use strict';
   console.log(process.env.id + ' eleccionActiva()');
-  request('http://localhost:3000/servicio/informacion',
+  request('/servicio/informacion',
     (error, response, body) => {
       if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
@@ -144,7 +144,7 @@ var eleccionPasiva = () => {
 var avisar = () => {
   'use strict';
   console.log(process.env.id + ' avisar()');
-  request('http://localhost:3000/servicio/informacion',
+  request('/servicio/informacion',
     (error, response, body) => {
       var info = JSON.parse(body);
       if (!error && response.statusCode === 200) {
@@ -196,7 +196,7 @@ process.on('message', (message) => {
       if (process.env.estado === 'PARADO') {
         break;
       }
-      request('http://localhost:3000/servicio/informacion',
+      request('/servicio/informacion',
         (error, response, body) => {
           if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
