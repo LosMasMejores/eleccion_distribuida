@@ -41,12 +41,12 @@ app.controller('gestor', function($scope, $http, $interval) {
     }).then(function successCallback(response) {
       console.log(response.data);
       $scope.servidores.forEach(function(value) {
-        if (value.servidor != servidor.servidor) {
+        if (value.servidor !== servidor.servidor) {
           postInfo(idProceso, value.servidor, servidor.servidor);
         }
-      })
+      });
     }, function errorCallback(response) {});
-  }
+  };
 
   $scope.arrancar = function(idProceso, servidor) {
     $http({
@@ -85,7 +85,7 @@ app.controller('gestor', function($scope, $http, $interval) {
       console.log(response.data);
       $scope.infoProcesos[idProceso] = response.data;
     }, function errorCallback(response) {});
-  }
+  };
 
   var postInfo = function(idProceso, servidor, host) {
     $http({
@@ -98,7 +98,7 @@ app.controller('gestor', function($scope, $http, $interval) {
     }).then(function successCallback(response) {
       console.log(response.data);
     }, function errorCallback(response) {});
-  }
+  };
 
   /*$interval(function(){
     $scope.servidores.forEach(function(servidor){
