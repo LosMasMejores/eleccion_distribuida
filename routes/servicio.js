@@ -42,7 +42,8 @@ router.get('/arrancar', (req, res) => {
         id: req.query.id,
         coordinador: 0,
         estado: 'PARADO',
-        eleccion: 'ACUERDO'
+        eleccion: 'ACUERDO',
+        servidor: 'localhost:' + req.app.settings.port
       }
     };
     var child = child_process.fork('process/proceso.js', [], options);
