@@ -33,7 +33,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
     }, function errorCallback(response) {});
   };
 
-  $scope.crear = function(idProceso, servidor) {
+  $scope.crearProceso = function(idProceso, servidor) {
     servidor.procesos.push(idProceso);
     $http({
       method: 'GET',
@@ -48,7 +48,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
     }, function errorCallback(response) {});
   };
 
-  $scope.arrancar = function(idProceso, servidor) {
+  $scope.arrancarProceso = function(idProceso, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/arrancar",
@@ -61,7 +61,7 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
     }, function errorCallback(response) {});
   };
 
-  $scope.parar = function(idProceso, servidor) {
+  $scope.pararProceso = function(idProceso, servidor) {
     $http({
       method: 'GET',
       url: "http://" + servidor + "/servicio/parar",

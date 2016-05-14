@@ -12,7 +12,7 @@ block content
         button.btn-primary(type="submit") Añadir
       div.container(ng-repeat="servidor in servidores track by $index")
         h1 Servidor: {{servidor.servidor}}
-        form.form-inline(role="form" ng-submit="crear(idProceso, servidor)")
+        form.form-inline(role="form" ng-submit="crearProceso(idProceso, servidor)")
           div.form-group
             label PROCESO:
             input(type="text" placeholder="1" ng-model="idProceso" pattern="[0-9]{1,4}" required)
@@ -30,9 +30,9 @@ block content
             tr
               td {{proceso}}
               td
-                button.btn.btn-success(ng-click="arrancar(proceso, servidor.servidor)") Arrancar
+                button.btn.btn-success(ng-click="arrancarProceso(proceso, servidor.servidor)") Arrancar
               td
-                button.btn.btn-danger(ng-click="parar(proceso, servidor.servidor)") Parar
+                button.btn.btn-danger(ng-click="pararProceso(proceso, servidor.servidor)") Parar
               td {{infoProcesos[proceso].coordinador}}
               td {{infoProcesos[proceso].eleccion}}
               td {{infoProcesos[proceso].estado}}
