@@ -55,8 +55,8 @@ app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http
       console.log(response.data);
       getInfo(idProceso, servidor);
       $scope.servidores.forEach(function(value) {
-        if (value.servidor !== servidor.servidor) {
-          postInfo(idProceso, value.servidor, servidor.servidor);
+        if (value.servidor !== servidor) {
+          postInfo(idProceso, value.servidor, servidor);
         }
       });
     }, function errorCallback(response) {});
