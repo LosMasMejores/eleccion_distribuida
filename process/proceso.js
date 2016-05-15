@@ -17,7 +17,8 @@ var myEmitter = new EventEmitter();
 /**
  * Tarea principal del proceso
  * @param  {Function} next Callback que se llama en cada iteracion
- * @return {undefined} No devuelve ningun valor, solo sirve para asegurarse se que no se continua
+ * @return {undefined} No devuelve ningun valor, solo sirve para asegurarse se
+ * que no se continua
  */
 var run = (next) => {
   'use strict';
@@ -36,7 +37,8 @@ var run = (next) => {
             });
             return next();
           }
-          request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
+          request('http://' + server + '/servicio/computar?id=' +
+            process.env.coordinador,
             (error, response, body) => {
               if (!error && response.statusCode === 200) {
                 if (JSON.parse(body).resultado === -1) {
@@ -100,7 +102,8 @@ var eleccionActiva = () => {
         var at_least_one = false;
         for (var key in info) {
           if (info.hasOwnProperty(key) && key > process.env.id) {
-            request.get('http://' + info[key] + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id);
+            request.get('http://' + info[key] + '/servicio/eleccion?id=' +
+              key + '&candidato=' + process.env.id);
             at_least_one = true;
           }
         }
@@ -136,7 +139,8 @@ var eleccionPasiva = () => {
 
 
 /**
- * Funcion que se encarga de avisar al resto de procesos de que somos el coordinador
+ * Funcion que se encarga de avisar al resto de procesos de que somos el
+ * coordinador
  * @return {undefined} No devuelve nada
  */
 var avisar = () => {
@@ -151,7 +155,8 @@ var avisar = () => {
             if (key === process.env.id) {
               continue;
             }
-            request.get('http://' + info[key] + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id);
+            request.get('http://' + info[key] + '/servicio/coordinador?id=' +
+              key + '&candidato=' + process.env.id);
           }
         }
       }
@@ -199,7 +204,8 @@ process.on('message', (message) => {
           if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
             if (info[message.candidato]) {
-              request.get('http://' + info[message.candidato] + '/servicio/ok?id=' + message.candidato);
+              request.get('http://' + info[message.candidato] +
+                '/servicio/ok?id=' + message.candidato);
             }
           }
         });

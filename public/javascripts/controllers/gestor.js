@@ -1,7 +1,8 @@
 var app = angular.module('myApp', []);
 
 
-app.controller('gestor', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
+app.controller('gestor', ['$scope', '$http', '$interval', function($scope,
+  $http, $interval) {
   'use strict';
   $scope.servidores = [];
   $scope.infoProcesos = {};
