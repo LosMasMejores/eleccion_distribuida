@@ -21,7 +21,7 @@ var myEmitter = new EventEmitter();
  */
 var run = (next) => {
   'use strict';
-  console.log(process.env.id + ' run()');
+  // console.log(process.env.id + ' run()');
   if (process.env.estado === 'PARADO') {
     return next(process.env.id + ' run() PARADO');
   }
@@ -39,9 +39,7 @@ var run = (next) => {
           request('http://' + server + '/servicio/computar?id=' + process.env.coordinador,
             (error, response, body) => {
               if (!error && response.statusCode === 200) {
-                if (JSON.parse(body).resultado === 1) {
-                  console.log(JSON.parse(body));
-                } else {
+                if (JSON.parse(body).resultado === -1) {
                   myEmitter.emit('eleccion', {
                     cmd: 'eleccion'
                   });
@@ -65,7 +63,7 @@ var run = (next) => {
  */
 var computar = () => {
   'use strict';
-  console.log(process.env.id + ' computar()');
+  // console.log(process.env.id + ' computar()');
   if (process.env.estado === 'PARADO') {
     process.send({
       cmd: 'computar',
@@ -94,7 +92,7 @@ var computar = () => {
  */
 var eleccionActiva = () => {
   'use strict';
-  console.log(process.env.id + ' eleccionActiva()');
+  // console.log(process.env.id + ' eleccionActiva()');
   request('http://' + process.env.servidor + '/servicio/informacion',
     (error, response, body) => {
       if (!error && response.statusCode === 200) {
@@ -128,7 +126,7 @@ var eleccionActiva = () => {
  */
 var eleccionPasiva = () => {
   'use strict';
-  console.log(process.env.id + ' eleccionPasiva()');
+  // console.log(process.env.id + ' eleccionPasiva()');
   pasiva_timeout = setTimeout(() => {
     myEmitter.emit('eleccion', {
       cmd: 'noCoordinador'
@@ -143,7 +141,7 @@ var eleccionPasiva = () => {
  */
 var avisar = () => {
   'use strict';
-  console.log(process.env.id + ' avisar()');
+  // console.log(process.env.id + ' avisar()');
   request('http://' + process.env.servidor + '/servicio/informacion',
     (error, response, body) => {
       var info = JSON.parse(body);
