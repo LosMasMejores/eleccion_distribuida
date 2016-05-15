@@ -27,7 +27,7 @@ var run = (next) => {
     return next(process.env.id + ' run() PARADO');
   }
   _.delay(() => {
-    request('http://' + process.env.servidor + '/servicio/informacion',
+    request.get('http://' + process.env.servidor + '/servicio/informacion',
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
           var info = JSON.parse(body)[process.env.coordinador];
@@ -37,7 +37,7 @@ var run = (next) => {
             });
             return next();
           }
-          request('http://' + info.server + '/servicio/computar?id=' +
+          request.get('http://' + info.server + '/servicio/computar?id=' +
             process.env.coordinador,
             (error, response, body) => {
               if (!error && response.statusCode === 200) {
@@ -97,7 +97,7 @@ var computar = () => {
 var eleccionActiva = () => {
   'use strict';
   // console.log(process.env.id + ' eleccionActiva()');
-  request('http://' + process.env.servidor + '/servicio/informacion',
+  request.get('http://' + process.env.servidor + '/servicio/informacion',
     (error, response, body) => {
       if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
@@ -152,7 +152,7 @@ var eleccionPasiva = () => {
 var avisar = () => {
   'use strict';
   // console.log(process.env.id + ' avisar()');
-  request('http://' + process.env.servidor + '/servicio/informacion',
+  request.get('http://' + process.env.servidor + '/servicio/informacion',
     (error, response, body) => {
       var info = JSON.parse(body);
       if (!error && response.statusCode === 200) {
@@ -206,7 +206,7 @@ process.on('message', (message) => {
       if (process.env.estado === 'PARADO') {
         break;
       }
-      request('http://' + process.env.servidor + '/servicio/informacion',
+      request.get('http://' + process.env.servidor + '/servicio/informacion',
         (error, response, body) => {
           if (!error && response.statusCode === 200) {
             var info = JSON.parse(body);
