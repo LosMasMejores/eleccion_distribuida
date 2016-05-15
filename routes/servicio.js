@@ -35,6 +35,7 @@ router.get('/arrancar', (req, res) => {
     return res.sendStatus(400);
   }
   if (procesos[req.query.id]) {
+    informacion[req.query.id].state = 'running';
     procesos[req.query.id].send({
       cmd: 'arrancar'
     });
@@ -55,14 +56,17 @@ router.get('/arrancar', (req, res) => {
   child.on('message', (m) => {
     switch (m.cmd) {
       case 'info':
-        myEmitter.emit(m.id, m.info);
+        myEmitter.emit('info:' + m.id, m.info);
         break;
       case 'computar':
-        myEmitter.emit('computar', m.computar);
+        myEmitter.emit('computar:' + m.id, m.computar);
         break;
     }
   });
-  informacion[req.query.id] = req.hostname + ':' + req.app.settings.port;
+  informacion[req.query.id] = {
+    server: req.hostname + ':' + req.app.settings.port,
+    state: 'running'
+  };
   procesos[req.query.id] = child;
   child.send({
     cmd: 'arrancar'
@@ -84,11 +88,12 @@ router.get('/parar', (req, res) => {
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
+  informacion[req.query.id].state = 'stopped';
   procesos[req.query.id].send({
     cmd: 'parar'
   });
   res.send(JSON.stringify({
-    state: 'stopping'
+    state: 'stopped'
   }));
 });
 
@@ -104,7 +109,7 @@ router.get('/computar', (req, res) => {
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  myEmitter.once('computar', (m) => {
+  myEmitter.once('computar:' + req.query.id, (m) => {
     res.send(m);
   });
   procesos[req.query.id].send({
@@ -192,7 +197,7 @@ router.get('/informacion/:option', (req, res) => {
       if (!procesos[req.query.id]) {
         return res.sendStatus(400);
       }
-      myEmitter.once(req.query.id, (m) => {
+      myEmitter.once('info:' + req.query.id, (m) => {
         res.send(m);
       });
       procesos[req.query.id].send({
@@ -213,11 +218,11 @@ router.post('/informacion', (req, res) => {
   if (Object.keys(req.query).length !== 0) {
     return res.sendStatus(400);
   }
-  if (req.body.id && req.body.servidor) {
-    informacion[req.body.id] = req.body.servidor;
-    res.send(JSON.stringify({
-      status: 'saved'
-    }));
+  if (req.body.id && req.body.servidor && req.body.estado) {
+    informacion[req.body.id] = {
+      server: req.hostname + ':' + req.body.servidor,
+      state: req.body.estado
+    };
   } else {
     res.sendStatus(400);
   }
