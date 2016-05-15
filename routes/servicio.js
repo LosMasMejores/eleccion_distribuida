@@ -30,18 +30,13 @@ Arrancar un proceso
  */
 router.get('/arrancar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (procesos[req.query.id]) {
     informacion[req.query.id].state = 'running';
-    procesos[req.query.id].send({
-      cmd: 'arrancar'
-    });
-    return res.send(JSON.stringify({
-      state: 'running'
-    }));
+    procesos[req.query.id].send({cmd: 'arrancar'});
+    return res.send(JSON.stringify({state: 'running'}));
   }
   var options = {
     env: {
@@ -68,12 +63,8 @@ router.get('/arrancar', (req, res) => {
     state: 'running'
   };
   procesos[req.query.id] = child;
-  child.send({
-    cmd: 'arrancar'
-  });
-  res.send(JSON.stringify({
-    state: 'running'
-  }));
+  child.send({cmd: 'arrancar'});
+  res.send(JSON.stringify({state: 'running'}));
 });
 
 /*
@@ -81,20 +72,15 @@ Parar un proceso
  */
 router.get('/parar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
   informacion[req.query.id].state = 'stopped';
-  procesos[req.query.id].send({
-    cmd: 'parar'
-  });
-  res.send(JSON.stringify({
-    state: 'stopped'
-  }));
+  procesos[req.query.id].send({cmd: 'parar'});
+  res.send(JSON.stringify({state: 'stopped'}));
 });
 
 /*
@@ -102,8 +88,7 @@ Obtener el reultado de la computacion de un proceso
  */
 router.get('/computar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
@@ -112,9 +97,7 @@ router.get('/computar', (req, res) => {
   myEmitter.once('computar:' + req.query.id, (m) => {
     res.send(m);
   });
-  procesos[req.query.id].send({
-    cmd: 'computar'
-  });
+  procesos[req.query.id].send({cmd: 'computar'});
 });
 
 /*
@@ -122,20 +105,14 @@ Iniciar el proceso de eleccion de un proceso
  */
 router.get('/eleccion', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query
-      .id) || !req.query.candidato || isNaN(req.query.candidato)) {
+  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query.id) || !req.query.candidato || isNaN(req.query.candidato)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  procesos[req.query.id].send({
-    cmd: 'eleccion',
-    candidato: req.query.candidato
-  });
-  res.send(JSON.stringify({
-    status: 'eleccion'
-  }));
+  procesos[req.query.id].send({cmd: 'eleccion', candidato: req.query.candidato});
+  res.send(JSON.stringify({status: 'eleccion'}));
 });
 
 /*
@@ -143,19 +120,14 @@ Enviar mensaje OK
  */
 router.get('/ok', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  procesos[req.query.id].send({
-    cmd: 'ok'
-  });
-  res.send(JSON.stringify({
-    status: 'ok'
-  }));
+  procesos[req.query.id].send({cmd: 'ok'});
+  res.send(JSON.stringify({status: 'ok'}));
 });
 
 /*
@@ -190,8 +162,7 @@ router.get('/informacion/:option', (req, res) => {
       res.send(JSON.stringify(info));
       break;
     case 'proceso':
-      if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req
-          .query.id)) {
+      if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
         return res.sendStatus(400);
       }
       if (!procesos[req.query.id]) {
@@ -200,9 +171,7 @@ router.get('/informacion/:option', (req, res) => {
       myEmitter.once('info:' + req.query.id, (m) => {
         res.send(m);
       });
-      procesos[req.query.id].send({
-        cmd: 'informacion'
-      });
+      procesos[req.query.id].send({cmd: 'informacion'});
       break;
     default:
       res.sendStatus(400);
@@ -233,20 +202,14 @@ Enviar el coordinador a un proceso
  */
 router.get('/coordinador', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query
-      .id) || !req.query.candidato || isNaN(req.query.candidato)) {
+  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query.id) || !req.query.candidato || isNaN(req.query.candidato)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  procesos[req.query.id].send({
-    cmd: 'coordinador',
-    candidato: req.query.candidato
-  });
-  res.send(JSON.stringify({
-    candidato: req.query.candidato
-  }));
+  procesos[req.query.id].send({cmd: 'coordinador', candidato: req.query.candidato});
+  res.send(JSON.stringify({candidato: req.query.candidato}));
 });
 
 module.exports = router;
