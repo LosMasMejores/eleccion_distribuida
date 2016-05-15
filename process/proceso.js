@@ -26,25 +26,34 @@ var run = (next) => {
     return next(process.env.id + ' run() PARADO');
   }
   _.delay(() => {
-    request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        var info = JSON.parse(body)[process.env.coordinador];
-        if (!info) {
-          myEmitter.emit('eleccion', {cmd: 'eleccion'});
-          return next();
-        }
-        request.get('http://' + info.server + '/servicio/computar?id=' + process.env.coordinador, (error, response, body) => {
-          if (!error && response.statusCode === 200) {
-            if (JSON.parse(body).resultado === -1) {
-              myEmitter.emit('eleccion', {cmd: 'eleccion'});
-            }
-          } else {
-            myEmitter.emit('eleccion', {cmd: 'eleccion'});
+    request.get('http://' + process.env.servidor +
+      '/servicio/informacion', (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          var info = JSON.parse(body)[process.env.coordinador];
+          if (!info) {
+            myEmitter.emit('eleccion', {
+              cmd: 'eleccion'
+            });
+            return next();
           }
-          next();
-        });
-      }
-    });
+          request.get('http://' + info.server +
+            '/servicio/computar?id=' + process.env.coordinador, (
+              error, response, body) => {
+              if (!error && response.statusCode === 200) {
+                if (JSON.parse(body).resultado === -1) {
+                  myEmitter.emit('eleccion', {
+                    cmd: 'eleccion'
+                  });
+                }
+              } else {
+                myEmitter.emit('eleccion', {
+                  cmd: 'eleccion'
+                });
+              }
+              next();
+            });
+        }
+      });
   }, parseInt(Math.random() * 500) + 500);
 };
 
@@ -85,7 +94,8 @@ var computar = () => {
 var eleccionActiva = () => {
   'use strict';
   // console.log(process.env.id + ' eleccionActiva()');
-  request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
+  request.get('http://' + process.env.servidor + '/servicio/informacion', (
+    error, response, body) => {
     if (!error && response.statusCode === 200) {
       var info = JSON.parse(body);
       var at_least_one = false;
@@ -94,16 +104,22 @@ var eleccionActiva = () => {
           if (key <= process.env.id || info[key].state === 'stopped') {
             continue;
           }
-          request.get('http://' + info[key].server + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id);
+          request.get('http://' + info[key].server +
+            '/servicio/eleccion?id=' + key + '&candidato=' + process.env
+            .id);
           at_least_one = true;
         }
       }
       if (at_least_one) {
         activa_timeout = setTimeout(() => {
-          myEmitter.emit('eleccion', {cmd: 'avisar'});
+          myEmitter.emit('eleccion', {
+            cmd: 'avisar'
+          });
         }, 1000);
       } else {
-        myEmitter.emit('eleccion', {cmd: 'avisar'});
+        myEmitter.emit('eleccion', {
+          cmd: 'avisar'
+        });
       }
     }
   });
@@ -117,7 +133,9 @@ var eleccionPasiva = () => {
   'use strict';
   // console.log(process.env.id + ' eleccionPasiva()');
   pasiva_timeout = setTimeout(() => {
-    myEmitter.emit('eleccion', {cmd: 'noCoordinador'});
+    myEmitter.emit('eleccion', {
+      cmd: 'noCoordinador'
+    });
   }, 1000);
 };
 
@@ -129,7 +147,8 @@ var eleccionPasiva = () => {
 var avisar = () => {
   'use strict';
   // console.log(process.env.id + ' avisar()');
-  request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
+  request.get('http://' + process.env.servidor + '/servicio/informacion', (
+    error, response, body) => {
     var info = JSON.parse(body);
     if (!error && response.statusCode === 200) {
       for (var key in info) {
@@ -137,7 +156,9 @@ var avisar = () => {
           if (key === process.env.id) {
             continue;
           }
-          request.get('http://' + info[key].server + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id);
+          request.get('http://' + info[key].server +
+            '/servicio/coordinador?id=' + key + '&candidato=' + process
+            .env.id);
         }
       }
     }
@@ -157,7 +178,9 @@ process.on('message', (message) => {
         break;
       }
       process.env.estado = 'CORRIENDO';
-      myEmitter.emit('eleccion', {cmd: 'eleccion'});
+      myEmitter.emit('eleccion', {
+        cmd: 'eleccion'
+      });
       async.forever(run, (err) => {
         console.log(err);
       });
@@ -169,20 +192,26 @@ process.on('message', (message) => {
       _.defer(computar);
       break;
     case 'informacion':
-      process.send({cmd: 'info', id: process.env.id, info: process.env});
+      process.send({
+        cmd: 'info',
+        id: process.env.id,
+        info: process.env
+      });
       break;
     case 'eleccion':
       if (process.env.estado === 'PARADO') {
         break;
       }
-      request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          var info = JSON.parse(body);
-          if (info[message.candidato]) {
-            request.get('http://' + info[message.candidato].server + '/servicio/ok?id=' + message.candidato);
+      request.get('http://' + process.env.servidor +
+        '/servicio/informacion', (error, response, body) => {
+          if (!error && response.statusCode === 200) {
+            var info = JSON.parse(body);
+            if (info[message.candidato]) {
+              request.get('http://' + info[message.candidato].server +
+                '/servicio/ok?id=' + message.candidato);
+            }
           }
-        }
-      });
+        });
       myEmitter.emit('eleccion', message);
       break;
     case 'ok':
