@@ -99,17 +99,14 @@ var eleccionActiva = () => {
     if (!error && response.statusCode === 200) {
       var info = JSON.parse(body);
       var at_least_one = false;
-      for (var key in info) {
-        if (info.hasOwnProperty(key)) {
-          if (key <= process.env.id || info[key].state === 'stopped') {
-            continue;
-          }
-          request.get('http://' + info[key].server +
-            '/servicio/eleccion?id=' + key + '&candidato=' + process.env
-            .id);
+      _.each(info, (val, key) => {
+        if (key > process.env.id && val.state !== 'PARADO') {
+          request.get('http://' + val.server +
+            '/servicio/eleccion?id=' + key + '&candidato=' +
+            process.env.id);
           at_least_one = true;
         }
-      }
+      });
       if (at_least_one) {
         activa_timeout = setTimeout(() => {
           myEmitter.emit('eleccion', {
@@ -151,16 +148,13 @@ var avisar = () => {
     error, response, body) => {
     var info = JSON.parse(body);
     if (!error && response.statusCode === 200) {
-      for (var key in info) {
-        if (info.hasOwnProperty(key)) {
-          if (key === process.env.id) {
-            continue;
-          }
-          request.get('http://' + info[key].server +
-            '/servicio/coordinador?id=' + key + '&candidato=' + process
-            .env.id);
+      _.each(info, (val, key) => {
+        if (key !== process.env.id) {
+          request.get('http://' + val.server +
+            '/servicio/coordinador?id=' + key + '&candidato=' +
+            process.env.id);
         }
-      }
+      });
     }
   });
 };

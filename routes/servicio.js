@@ -9,6 +9,7 @@ var router = express.Router();
 
 var child_process = require('child_process');
 var EventEmitter = require('events');
+var _ = require('underscore');
 
 var myEmitter = new EventEmitter();
 var procesos = {};
@@ -35,12 +36,12 @@ router.get('/arrancar', (req, res) => {
     return res.sendStatus(400);
   }
   if (procesos[req.query.id]) {
-    informacion[req.query.id].state = 'running';
+    informacion[req.query.id].state = 'CORRIENDO';
     procesos[req.query.id].send({
       cmd: 'arrancar'
     });
     return res.send(JSON.stringify({
-      state: 'running'
+      state: 'CORRIENDO'
     }));
   }
   var options = {
@@ -65,14 +66,14 @@ router.get('/arrancar', (req, res) => {
   });
   informacion[req.query.id] = {
     server: req.hostname + ':' + req.app.settings.port,
-    state: 'running'
+    state: 'CORRIENDO'
   };
   procesos[req.query.id] = child;
   child.send({
     cmd: 'arrancar'
   });
   res.send(JSON.stringify({
-    state: 'running'
+    state: 'CORRIENDO'
   }));
 });
 
@@ -88,12 +89,12 @@ router.get('/parar', (req, res) => {
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  informacion[req.query.id].state = 'stopped';
+  informacion[req.query.id].state = 'PARADO';
   procesos[req.query.id].send({
     cmd: 'parar'
   });
   res.send(JSON.stringify({
-    state: 'stopped'
+    state: 'PARADO'
   }));
 });
 
@@ -179,14 +180,7 @@ router.get('/informacion/:option', (req, res) => {
       if (Object.keys(req.query).length !== 0) {
         return res.sendStatus(400);
       }
-      var info = {
-        procesos: []
-      };
-      for (var key in procesos) {
-        if (procesos.hasOwnProperty(key)) {
-          info.procesos.push(key);
-        }
-      }
+      var info = _.keys(procesos);
       res.send(JSON.stringify(info));
       break;
     case 'proceso':
