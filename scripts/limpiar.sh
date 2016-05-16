@@ -13,8 +13,8 @@ then
     echo "Eliminando proyecto $PROYECTO en mAquina $host"
     ssh $host "rm -r $PROYECTO; exit"
 
-    echo "Desinstalando PM2 en mAquina $host"
-    ssh $host "npm unistall pm2 -g; exit"
+    #echo "Desinstalando PM2 en mAquina $host"
+    #ssh $host "sudo ·npm unistall pm2 -g; exit"
   done
 
 else

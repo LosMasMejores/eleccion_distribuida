@@ -15,8 +15,8 @@ then
     echo "Instalando proyecto $PROYECTO en mAquina $host"
     ssh $host "cd $PROYECTO; npm install; exit"
 
-    echo "Instalando PM2 en mAquina $host"
-    ssh $host "npm install pm2 -g; exit"
+    #echo "Instalando PM2 en mAquina $host"
+    #ssh $host "sudo npm install pm2 -g; exit"
 
     echo "Arrancando proyecto $PROYECTO en mAquina $host"
     ssh $host "cd $PROYECTO; pm2 start ./bin/www; exit"

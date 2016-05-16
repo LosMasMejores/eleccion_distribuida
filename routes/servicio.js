@@ -31,8 +31,7 @@ Arrancar un proceso
  */
 router.get('/arrancar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (procesos[req.query.id]) {
@@ -82,8 +81,7 @@ Parar un proceso
  */
 router.get('/parar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
@@ -103,8 +101,7 @@ Obtener el reultado de la computacion de un proceso
  */
 router.get('/computar', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
@@ -123,8 +120,7 @@ Iniciar el proceso de eleccion de un proceso
  */
 router.get('/eleccion', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query
-      .id) || !req.query.candidato || isNaN(req.query.candidato)) {
+  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query.id) || !req.query.candidato || isNaN(req.query.candidato)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
@@ -144,8 +140,7 @@ Enviar mensaje OK
  */
 router.get('/ok', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query
-      .id)) {
+  if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {
@@ -187,8 +182,7 @@ router.get('/informacion/:option', (req, res) => {
       res.send(JSON.stringify(info));
       break;
     case 'proceso':
-      if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req
-          .query.id)) {
+      if (Object.keys(req.query).length !== 1 || !req.query.id || isNaN(req.query.id)) {
         return res.sendStatus(400);
       }
       if (!procesos[req.query.id]) {
@@ -233,8 +227,7 @@ Enviar el coordinador a un proceso
  */
 router.get('/coordinador', (req, res) => {
   'use strict';
-  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query
-      .id) || !req.query.candidato || isNaN(req.query.candidato)) {
+  if (Object.keys(req.query).length !== 2 || !req.query.id || isNaN(req.query.id) || !req.query.candidato || isNaN(req.query.candidato)) {
     return res.sendStatus(400);
   }
   if (!procesos[req.query.id]) {

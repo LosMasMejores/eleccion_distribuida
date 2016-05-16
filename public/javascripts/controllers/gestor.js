@@ -23,8 +23,7 @@ app.controller('gestor', [
         console.log(response.data);
         angular.forEach($scope.servidores, function(server) {
           angular.forEach(server.procesos, function(proceso) {
-            postInfo(proceso, servidor, server.servidor,
-              $scope.infoProcesos[proceso].estado);
+            postInfo(proceso, servidor, server.servidor, $scope.infoProcesos[proceso].estado);
           });
         });
         $scope.servidores.push({
@@ -60,8 +59,7 @@ app.controller('gestor', [
         getInfo(idProceso, servidor);
         angular.forEach($scope.servidores, function(value) {
           if (value.servidor !== servidor) {
-            postInfo(idProceso, value.servidor, servidor,
-              'CORRIENDO');
+            postInfo(idProceso, value.servidor, servidor, 'CORRIENDO');
           }
         });
       }, function errorCallback(response) {});
@@ -82,8 +80,7 @@ app.controller('gestor', [
         getInfo(idProceso, servidor);
         angular.forEach($scope.servidores, function(value) {
           if (value.servidor !== servidor) {
-            postInfo(idProceso, value.servidor, servidor,
-              'PARADO');
+            postInfo(idProceso, value.servidor, servidor, 'PARADO');
           }
         });
       }, function errorCallback(response) {});

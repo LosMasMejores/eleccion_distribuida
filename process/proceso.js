@@ -26,34 +26,33 @@ var run = (next) => {
     return next(process.env.id + ' run() PARADO');
   }
   _.delay(() => {
-    request.get('http://' + process.env.servidor +
-      '/servicio/informacion', (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          var info = JSON.parse(body)[process.env.coordinador];
-          if (!info) {
+    request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        var info = JSON.parse(body)[process.env.coordinador];
+        if (!info) {
+          myEmitter.emit('eleccion', {
+            cmd: 'eleccion'
+          });
+          return next();
+        }
+        request.get('http://' + info.server + '/servicio/computar?id=' + process.env.coordinador, (error, response, body) => {
+          if (!error && response.statusCode === 200) {
+            if (JSON.parse(body).resultado === -1) {
+              myEmitter.emit('eleccion', {
+                cmd: 'eleccion'
+              });
+            }
+          } else {
             myEmitter.emit('eleccion', {
               cmd: 'eleccion'
             });
-            return next();
           }
-          request.get('http://' + info.server +
-            '/servicio/computar?id=' + process.env.coordinador, (
-              error, response, body) => {
-              if (!error && response.statusCode === 200) {
-                if (JSON.parse(body).resultado === -1) {
-                  myEmitter.emit('eleccion', {
-                    cmd: 'eleccion'
-                  });
-                }
-              } else {
-                myEmitter.emit('eleccion', {
-                  cmd: 'eleccion'
-                });
-              }
-              next();
-            });
-        }
-      });
+          next();
+        }).on('error', (err) => {
+          console.log(err);
+        });
+      }
+    });
   }, parseInt(Math.random() * 500) + 500);
 };
 
@@ -94,16 +93,15 @@ var computar = () => {
 var eleccionActiva = () => {
   'use strict';
   // console.log(process.env.id + ' eleccionActiva()');
-  request.get('http://' + process.env.servidor + '/servicio/informacion', (
-    error, response, body) => {
+  request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
     if (!error && response.statusCode === 200) {
       var info = JSON.parse(body);
       var at_least_one = false;
       _.each(info, (val, key) => {
         if (key > process.env.id && val.state !== 'PARADO') {
-          request.get('http://' + val.server +
-            '/servicio/eleccion?id=' + key + '&candidato=' +
-            process.env.id);
+          request.get('http://' + val.server + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
+            console.log(err);
+          });
           at_least_one = true;
         }
       });
@@ -144,15 +142,14 @@ var eleccionPasiva = () => {
 var avisar = () => {
   'use strict';
   // console.log(process.env.id + ' avisar()');
-  request.get('http://' + process.env.servidor + '/servicio/informacion', (
-    error, response, body) => {
+  request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
     var info = JSON.parse(body);
     if (!error && response.statusCode === 200) {
       _.each(info, (val, key) => {
         if (key !== process.env.id) {
-          request.get('http://' + val.server +
-            '/servicio/coordinador?id=' + key + '&candidato=' +
-            process.env.id);
+          request.get('http://' + val.server + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
+            console.log(err);
+          });
         }
       });
     }
@@ -196,16 +193,16 @@ process.on('message', (message) => {
       if (process.env.estado === 'PARADO') {
         break;
       }
-      request.get('http://' + process.env.servidor +
-        '/servicio/informacion', (error, response, body) => {
-          if (!error && response.statusCode === 200) {
-            var info = JSON.parse(body);
-            if (info[message.candidato]) {
-              request.get('http://' + info[message.candidato].server +
-                '/servicio/ok?id=' + message.candidato);
-            }
+      request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          var info = JSON.parse(body);
+          if (info[message.candidato]) {
+            request.get('http://' + info[message.candidato].server + '/servicio/ok?id=' + message.candidato).on('error', (err) => {
+              console.log(err);
+            });
           }
-        });
+        }
+      });
       myEmitter.emit('eleccion', message);
       break;
     case 'ok':
