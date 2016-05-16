@@ -214,7 +214,7 @@ router.post('/informacion', (req, res) => {
   }
   if (req.body.id && req.body.servidor && req.body.estado) {
     informacion[req.body.id] = {
-      server: req.hostname + ':' + req.body.servidor,
+      server: req.body.servidor,
       state: req.body.estado
     };
     res.send({
