@@ -217,6 +217,9 @@ router.post('/informacion', (req, res) => {
       server: req.hostname + ':' + req.body.servidor,
       state: req.body.estado
     };
+    res.send({
+      status: posted;
+    });
   } else {
     res.sendStatus(400);
   }
