@@ -218,7 +218,7 @@ router.post('/informacion', (req, res) => {
       state: req.body.estado
     };
     res.send({
-      status: posted
+      status: 'posted'
     });
   } else {
     res.sendStatus(400);
