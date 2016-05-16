@@ -63,6 +63,9 @@ router.get('/arrancar', (req, res) => {
         break;
     }
   });
+  child.on('error', (err) => {
+    console.log(err);
+  });
   informacion[req.query.id] = {
     server: req.hostname + ':' + req.app.settings.port,
     state: 'CORRIENDO'
