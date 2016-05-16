@@ -7,10 +7,13 @@ then
 
   for host in "$@"
   do
-    echo "Eliminar proyecto $PROYECTO en mAquina $host"
+    echo "Parando proyecto $PROYECTO en mAquina $host"
+    ssh $host "cd $PROYECTO; pm2 stop ./bin/www; exit"
+
+    echo "Eliminando proyecto $PROYECTO en mAquina $host"
     ssh $host "rm -r $PROYECTO; exit"
 
-    echo "DesInstalar PM2 en mAquina $host"
+    echo "Desinstalando PM2 en mAquina $host"
     ssh $host "npm unistall pm2 -g; exit"
   done
 

@@ -29,9 +29,9 @@ app.controller('gestor', [
         });
         $scope.servidores.push({
           servidor: servidor,
-          procesos: response.data
+          procesos: response.data.procesos
         });
-        angular.forEach(response.data, function(value) {
+        angular.forEach(response.data.procesos, function(value) {
           getInfo(value, servidor);
         });
       }, function errorCallback(response) {});

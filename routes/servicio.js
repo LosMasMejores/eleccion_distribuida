@@ -180,7 +180,10 @@ router.get('/informacion/:option', (req, res) => {
       if (Object.keys(req.query).length !== 0) {
         return res.sendStatus(400);
       }
-      var info = _.keys(procesos);
+      var info = {
+        procesos: []
+      };
+      info.procesos = _.keys(procesos);
       res.send(JSON.stringify(info));
       break;
     case 'proceso':
