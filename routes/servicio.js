@@ -4,6 +4,9 @@
 
 /*jslint node: true */
 
+/*
+Dependencias
+ */
 var express = require('express');
 var router = express.Router();
 
@@ -11,9 +14,16 @@ var child_process = require('child_process');
 var EventEmitter = require('events');
 var _ = require('underscore');
 
+// Emisor de eventos
 var myEmitter = new EventEmitter();
+// Lista de procesos en ejecucion
 var procesos = {};
+// Lista de informacion sobre donde se ejecutan los procesos
 var informacion = {};
+
+myEmitter.on('error', (err) => {
+  console.log(err);
+});
 
 /*
 Descripcion del servicio
@@ -23,7 +33,9 @@ router.get('/', (req, res) => {
   if (Object.keys(req.query).length !== 0) {
     return res.sendStatus(400);
   }
-  res.send('Servicio API REST');
+  res.send({
+    titulo: 'Servicio API REST'
+  });
 });
 
 /*
@@ -52,6 +64,7 @@ router.get('/arrancar', (req, res) => {
     }
   };
   var child = child_process.fork('process/proceso.js', [], options);
+  // Registramos los mensajes que envia el proceso
   child.on('message', (m) => {
     switch (m.cmd) {
       case 'info':
@@ -107,6 +120,7 @@ router.get('/computar', (req, res) => {
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
+  // Registramos (solo una vez) el evento 'computar'
   myEmitter.once('computar:' + req.query.id, (m) => {
     res.send(m);
   });
@@ -188,6 +202,7 @@ router.get('/informacion/:option', (req, res) => {
       if (!procesos[req.query.id]) {
         return res.sendStatus(400);
       }
+      // Registramos (solo una vez) el evento 'info'
       myEmitter.once('info:' + req.query.id, (m) => {
         res.send(m);
       });

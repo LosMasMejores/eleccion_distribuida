@@ -6,11 +6,14 @@ app.controller('gestor', [
   '$interval',
   function($scope, $http, $interval) {
     'use strict';
+
+    // Informacion sobre los servidores
     $scope.servidores = [];
+    // Informacion sobre los procesos
     $scope.infoProcesos = {};
 
     /*
-  Añadir informacion sobre los servidores conocidos
+    Añadir informacion sobre los servidores conocidos
    */
     $scope.guardarServidor = function(servidor) {
       if (servidor.split(':')[0] === '127.0.0.1') {
@@ -21,15 +24,18 @@ app.controller('gestor', [
         url: 'http://' + servidor + '/servicio/informacion/self'
       }).then(function successCallback(response) {
         console.log(response.data);
+        // Actualizamos el servidor con la informacion sobre el resto
         angular.forEach($scope.servidores, function(server) {
           angular.forEach(server.procesos, function(proceso) {
             postInfo(proceso, servidor, server.servidor);
           });
         });
+        // Añadimos la informacion del servidor
         $scope.servidores.push({
           servidor: servidor,
           procesos: response.data.procesos
         });
+        // Actualizamos la informacion sobre los procesos
         angular.forEach(response.data.procesos, function(value) {
           getInfo(value, servidor);
         });
@@ -37,7 +43,7 @@ app.controller('gestor', [
     };
 
     /*
-  Crear un proceso (no en el servidor)
+    Crear un proceso (no en el servidor)
    */
     $scope.crearProceso = function(idProceso, servidor) {
       servidor.procesos.push(idProceso);
@@ -45,7 +51,7 @@ app.controller('gestor', [
     };
 
     /*
-  Arrancar un proceso
+    Arrancar un proceso
    */
     $scope.arrancarProceso = function(idProceso, servidor) {
       $http({
@@ -57,6 +63,7 @@ app.controller('gestor', [
       }).then(function successCallback(response) {
         console.log(response.data);
         getInfo(idProceso, servidor);
+        // Avisamos a todos los servidores de que hemos iniciado un proceso
         angular.forEach($scope.servidores, function(value) {
           if (value.servidor !== servidor) {
             postInfo(idProceso, value.servidor, servidor);
@@ -66,7 +73,7 @@ app.controller('gestor', [
     };
 
     /*
-  Parar un proceso
+    Parar un proceso
    */
     $scope.pararProceso = function(idProceso, servidor) {
       $http({
@@ -82,7 +89,7 @@ app.controller('gestor', [
     };
 
     /*
-  Obtener la informacion de un proceso
+    Obtener la informacion de un proceso
    */
     var getInfo = function(idProceso, servidor) {
       $http({
@@ -98,7 +105,7 @@ app.controller('gestor', [
     };
 
     /*
-  Enviar la informacion de un proceso
+    Enviar la informacion de un proceso
    */
     var postInfo = function(idProceso, servidor, host) {
       $http({
@@ -114,7 +121,7 @@ app.controller('gestor', [
     };
 
     /*
-  Actualizar la informacion de los procesos
+    Actualizar la informacion de los procesos
    */
     $interval(function() {
       angular.forEach($scope.servidores, function(servidor) {

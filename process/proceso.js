@@ -4,14 +4,24 @@
 
 /*jslint node: true */
 
+/*
+Dependencias
+ */
 var async = require('async');
 var request = require('request');
 var _ = require('underscore');
 var EventEmitter = require('events');
 
+// Timeout de espera por ok()
 var activa_timeout;
+// Timeout de espera por coordinador()
 var pasiva_timeout;
+// Emisor de eventos
 var myEmitter = new EventEmitter();
+
+myEmitter.on('error', (err) => {
+  console.log(err);
+});
 
 /**
  * Tarea principal del proceso
@@ -26,6 +36,7 @@ var run = (next) => {
     return next(process.env.id + ' run() PARADO');
   }
   _.delay(() => {
+    // Pedir informacion sobre los procesos
     request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
       if (!error && response.statusCode === 200) {
         var info = JSON.parse(body)[process.env.coordinador];
@@ -35,6 +46,7 @@ var run = (next) => {
           });
           return next();
         }
+        // Llamar computar() a coordinador
         request.get('http://' + info.server + '/servicio/computar?id=' + process.env.coordinador, (error, response, body) => {
           if (!error && response.statusCode === 200) {
             if (JSON.parse(body).resultado === -1) {
@@ -97,6 +109,7 @@ var eleccionActiva = () => {
     if (!error && response.statusCode === 200) {
       var info = JSON.parse(body);
       var at_least_one = false;
+      // Enviar eleccion() a todos los procesos > a mi id
       _.each(info, (val, key) => {
         if (key > process.env.id) {
           request.get('http://' + val.server + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
@@ -106,6 +119,7 @@ var eleccionActiva = () => {
         }
       });
       if (at_least_one) {
+        // Esperar por respuesta
         activa_timeout = setTimeout(() => {
           myEmitter.emit('eleccion', {
             cmd: 'avisar'
@@ -145,6 +159,7 @@ var avisar = () => {
   request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
     var info = JSON.parse(body);
     if (!error && response.statusCode === 200) {
+      // Avisar a todos los procesos que somos el coordinador
       _.each(info, (val, key) => {
         if (key !== process.env.id) {
           request.get('http://' + val.server + '/servicio/coordinador?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
@@ -196,6 +211,7 @@ process.on('message', (message) => {
       request.get('http://' + process.env.servidor + '/servicio/informacion', (error, response, body) => {
         if (!error && response.statusCode === 200) {
           var info = JSON.parse(body);
+          // Enviar ok() al candidato como respuesta a eleccion()
           if (info[message.candidato]) {
             request.get('http://' + info[message.candidato].server + '/servicio/ok?id=' + message.candidato).on('error', (err) => {
               console.log(err);
@@ -252,6 +268,7 @@ myEmitter.on('eleccion', (message) => {
       if (process.env.eleccion === 'ELECCION PASIVA') {
         clearTimeout(pasiva_timeout);
       }
+      // Si recivimos coordinador < nuestro id, iniciamos eleccion
       if (message.candidato < process.env.id) {
         myEmitter.emit('eleccion', {
           cmd: 'eleccion'
