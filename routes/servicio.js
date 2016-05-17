@@ -224,7 +224,7 @@ router.post('/informacion', (req, res) => {
   if (Object.keys(req.query).length !== 0) {
     return res.sendStatus(400);
   }
-  if (req.body.id && req.body.servidor && req.body.estado) {
+  if (req.body.id && req.body.servidor) {
     informacion[req.body.id] = {
       server: req.body.servidor,
     };
