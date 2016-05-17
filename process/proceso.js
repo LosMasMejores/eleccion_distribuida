@@ -98,7 +98,7 @@ var eleccionActiva = () => {
       var info = JSON.parse(body);
       var at_least_one = false;
       _.each(info, (val, key) => {
-        if (key > process.env.id && val.state !== 'PARADO') {
+        if (key > process.env.id /*&& val.state !== 'PARADO'*/) {
           request.get('http://' + val.server + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
             console.log(err);
           });
