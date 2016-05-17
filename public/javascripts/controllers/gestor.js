@@ -78,11 +78,6 @@ app.controller('gestor', [
       }).then(function successCallback(response) {
         console.log(response.data);
         getInfo(idProceso, servidor);
-        angular.forEach($scope.servidores, function(value) {
-          if (value.servidor !== servidor) {
-            postInfo(idProceso, value.servidor, servidor);
-          }
-        });
       }, function errorCallback(response) {});
     };
 
