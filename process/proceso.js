@@ -98,7 +98,7 @@ var eleccionActiva = () => {
       var info = JSON.parse(body);
       var at_least_one = false;
       _.each(info, (val, key) => {
-        if (key > process.env.id /*&& val.state !== 'PARADO'*/) {
+        if (key > process.env.id) {
           request.get('http://' + val.server + '/servicio/eleccion?id=' + key + '&candidato=' + process.env.id).on('error', (err) => {
             console.log(err);
           });
@@ -206,9 +206,15 @@ process.on('message', (message) => {
       myEmitter.emit('eleccion', message);
       break;
     case 'ok':
+      if (process.env.estado === 'PARADO') {
+        break;
+      }
       myEmitter.emit('eleccion', message);
       break;
     case 'coordinador':
+      if (process.env.estado === 'PARADO') {
+        break;
+      }
       myEmitter.emit('eleccion', message);
       break;
   }
@@ -245,9 +251,15 @@ myEmitter.on('eleccion', (message) => {
     case 'coordinador':
       if (process.env.eleccion === 'ELECCION PASIVA') {
         clearTimeout(pasiva_timeout);
-        process.env.eleccion = 'ACUERDO';
+      }
+      if (message.candidato < process.env.id) {
+        myEmitter.emit('eleccion', {
+          cmd: 'eleccion'
+        });
+        break;
       }
       process.env.coordinador = message.candidato;
+      process.env.eleccion = 'ACUERDO';
       break;
     case 'noCoordinador':
       if (process.env.eleccion === 'ELECCION PASIVA') {

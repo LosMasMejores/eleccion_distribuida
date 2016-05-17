@@ -23,7 +23,7 @@ app.controller('gestor', [
         console.log(response.data);
         angular.forEach($scope.servidores, function(server) {
           angular.forEach(server.procesos, function(proceso) {
-            postInfo(proceso, servidor, server.servidor, $scope.infoProcesos[proceso].estado);
+            postInfo(proceso, servidor, server.servidor);
           });
         });
         $scope.servidores.push({
@@ -59,7 +59,7 @@ app.controller('gestor', [
         getInfo(idProceso, servidor);
         angular.forEach($scope.servidores, function(value) {
           if (value.servidor !== servidor) {
-            postInfo(idProceso, value.servidor, servidor, 'CORRIENDO');
+            postInfo(idProceso, value.servidor, servidor);
           }
         });
       }, function errorCallback(response) {});
@@ -80,7 +80,7 @@ app.controller('gestor', [
         getInfo(idProceso, servidor);
         angular.forEach($scope.servidores, function(value) {
           if (value.servidor !== servidor) {
-            postInfo(idProceso, value.servidor, servidor, 'PARADO');
+            postInfo(idProceso, value.servidor, servidor);
           }
         });
       }, function errorCallback(response) {});
@@ -105,14 +105,13 @@ app.controller('gestor', [
     /*
   Enviar la informacion de un proceso
    */
-    var postInfo = function(idProceso, servidor, host, estado) {
+    var postInfo = function(idProceso, servidor, host) {
       $http({
         method: 'POST',
         url: 'http://' + servidor + '/servicio/informacion',
         data: {
           servidor: host,
           id: idProceso,
-          estado: estado
         }
       }).then(function successCallback(response) {
         console.log(response.data);

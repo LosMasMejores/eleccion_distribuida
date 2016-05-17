@@ -35,7 +35,6 @@ router.get('/arrancar', (req, res) => {
     return res.sendStatus(400);
   }
   if (procesos[req.query.id]) {
-    informacion[req.query.id].state = 'CORRIENDO';
     procesos[req.query.id].send({
       cmd: 'arrancar'
     });
@@ -68,7 +67,6 @@ router.get('/arrancar', (req, res) => {
   });
   informacion[req.query.id] = {
     server: req.hostname + ':' + req.app.settings.port,
-    state: 'CORRIENDO'
   };
   procesos[req.query.id] = child;
   child.send({
@@ -90,7 +88,6 @@ router.get('/parar', (req, res) => {
   if (!procesos[req.query.id]) {
     return res.sendStatus(400);
   }
-  informacion[req.query.id].state = 'PARADO';
   procesos[req.query.id].send({
     cmd: 'parar'
   });
@@ -215,7 +212,6 @@ router.post('/informacion', (req, res) => {
   if (req.body.id && req.body.servidor && req.body.estado) {
     informacion[req.body.id] = {
       server: req.body.servidor,
-      state: req.body.estado
     };
     res.send({
       status: 'posted'
