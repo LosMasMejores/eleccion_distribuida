@@ -22,7 +22,8 @@ npm start
 ```
 ./scripts/shareKeys.sh [usuario@]servidor ...
 ```
-## Acceder al gestor:
+## Acceder al gestor
+### Desde navegador:
 ```
-ip_servidor:3000 (desde navegador)
+ip_servidor:3000
 ```
