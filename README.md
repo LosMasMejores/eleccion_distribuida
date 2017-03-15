@@ -1,5 +1,5 @@
 # eleccion_distribuida
-###*Implementación del algoritmo de elección distribuida Bully en Node.js*
+*Implementación del algoritmo de elección distribuida Bully en Node.js*
 ## Ejecución Local
 ### Instalación:
 ```
@@ -25,5 +25,5 @@ npm start
 ## Acceder al gestor
 ### Desde navegador:
 ```
-ip_servidor:3000
+[ip_servidor]:3000
 ```
